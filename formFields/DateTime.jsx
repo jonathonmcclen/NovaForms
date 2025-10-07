@@ -3,6 +3,38 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+// #region Types
+
+/**
+ * @typedef DateTimeInput
+ *
+ * @property {string} name
+ * @property {string} title
+ * @property {string} description
+ * @property {string} helper
+ * @property {boolean} optional
+ * @property {boolean} required
+ * @property {string} error
+ */
+
+/**
+ * @typedef DateTimeArguments
+ *
+ * @property {DateTimeInput} field
+ * @property {string} value
+ * @property {(arg: string) => void} [onChange = null]
+ * @property {any} theme TODO: Implement theme type.
+ */
+
+// #endregion
+
+// #region Components
+
+/**
+ * @param {DateTimeArguments} args
+ *
+ * @returns {JSX.Element}
+ */
 export default function DateTime({ field, value, onChange, theme }) {
   const { name, title, description, helper, optional, required, error } = field
 
@@ -118,3 +150,5 @@ export default function DateTime({ field, value, onChange, theme }) {
     </div>
   )
 }
+
+// #endregion
