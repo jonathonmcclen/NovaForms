@@ -3,6 +3,28 @@
 import { useEffect, useState } from 'react'
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid'
 
+/** @import { SetStateAction } from 'react' */
+
+// #region Types
+
+/**
+ * @typedef {'Facebook'|'Instagram'|'Twitter'|'LinkedIn'|'YouTube'|'TikTok'|'GitHub'} SocialMediaOptions
+ */
+
+/**
+ * @typedef {{[id: string]: string}} SocialMediaLinksDictionary
+ */
+
+/**
+ * @typedef SocialMediaLinksArguments
+ *
+ * @property {SocialMediaLinksDictionary} [value = {}]
+ * @property {() => void} [onChange = null]
+ */
+
+// #endregion
+
+// #region Constants
 const SOCIAL_OPTIONS = [
   'Facebook',
   'Instagram',
@@ -13,8 +35,20 @@ const SOCIAL_OPTIONS = [
   'GitHub',
 ]
 
+// #endregion
+
+// #region Components
+
+/**
+ * @param {SocialMediaLinksArguments} args
+ *
+ * @returns {JSX.Element}
+ */
 export default function SocialMediaLinks({ value = {}, onChange }) {
+  /** @type {[SocialMediaOptions, Dispatch<SetStateAction<string>]} */
   const [selected, setSelected] = useState(SOCIAL_OPTIONS[0])
+
+  /** @type {[SocialMediaLinksDictionary, Dispatch<SetStateAction<SocialMediaLinksDictionary>]} */
   const [links, setLinks] = useState(value)
 
   useEffect(() => {
