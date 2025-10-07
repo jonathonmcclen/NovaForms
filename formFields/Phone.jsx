@@ -31,8 +31,18 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
 // #region Constants
 
-// Regex for 10 digits only
+/**
+ * @type {RegExp}
+ * 
+ * Regex for 10 digits only.
+ */
 const REGEX_PHONE = /^\d{10}$/
+
+/**
+ * @type {RegExp}
+ * 
+ * For generic digits string-processing.
+ */
 const REGEX_DIGIT = /\D/g
 
 // #endregion
