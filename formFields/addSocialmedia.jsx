@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid'
 
-/** @import { SetStateAction } from 'react' */
+/** @import { Dispatch, SetStateAction } from 'react' */
 
 // #region Types
 
