@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/** @import { Dispatch, SetStateAction } from 'react' */
+
 // #region Types
 
 /**
@@ -33,14 +35,14 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
 /**
  * @type {RegExp}
- * 
+ *
  * Regex for 10 digits only.
  */
 const REGEX_PHONE = /^\d{10}$/
 
 /**
  * @type {RegExp}
- * 
+ *
  * For generic digits string-processing.
  */
 const REGEX_DIGIT = /\D/g
@@ -67,6 +69,8 @@ export default function PhoneInput({ field, value, onChange, theme }) {
   } = field
 
   const [isFocused, setIsFocused] = useState(false)
+
+  /** @type {[string|null, Dispatch<SetStateAction<string|null>>]} */
   const [error, setError] = useState(null)
 
   const hasError = Boolean(error)
