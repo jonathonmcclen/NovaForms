@@ -10,7 +10,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
  *
  * @property {string} name
  * @property {string} title
- * @property {string} placeholder
+ * @property {string} [placeholder = "(123) 456-7890"] (Optional)
  * @property {string} description
  * @property {boolean} required
  * @property {string} helper
