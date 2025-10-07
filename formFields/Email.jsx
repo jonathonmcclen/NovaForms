@@ -33,7 +33,11 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
 // #region Constants
 
-// Basic but solid email regex
+/**
+ * @type {RegEx}
+ *
+ * Basic but solid email regex
+ */
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // #endregion
