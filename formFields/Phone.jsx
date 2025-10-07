@@ -3,6 +3,47 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+// #region Types
+
+/**
+ * @typedef PhoneRecord
+ *
+ * @property {string} name
+ * @property {string} title
+ * @property {string} placeholder
+ * @property {string} description
+ * @property {boolean} required
+ * @property {string} helper
+ * @property {any} leadingIcon FIXME: Not sure if string, boolean, or component.
+ * @property {any} trailingIcon FIXME: Not sure if string, boolean, or component.
+ */
+
+/**
+ * @typedef PhoneInputArguments
+ *
+ * @property {PhoneRecord} field
+ * @property {string} value
+ * @property {(target: {name: string, value: string}) => void} onChange
+ * @property {any} theme TODO: Write the typedef for themes.
+ */
+
+// #endregion
+
+// #region Constants
+
+// Regex for 10 digits only
+const REGEX_PHONE = /^\d{10}$/
+const REGEX_DIGIT = /\D/g
+
+// #endregion
+
+// #region Components
+
+/**
+ * @param {PhoneInputArguments} args
+ *
+ * @returns {JSX.Element}
+ */
 export default function PhoneInput({ field, value, onChange, theme }) {
   const {
     name,
@@ -26,12 +67,9 @@ export default function PhoneInput({ field, value, onChange, theme }) {
       ? theme.inputFocusBorder
       : theme.inputBorder
 
-  // Regex for 10 digits only
-  const phoneRegex = /^\d{10}$/
-
   // Masking formatter: (123) 456-7890
   const formatPhone = (input) => {
-    const digits = input.replace(/\D/g, '').slice(0, 10) // only 10 digits max
+    const digits = input.replace(REGEX_DIGIT, '').slice(0, 10) // only 10 digits max
     const parts = []
 
     if (digits.length > 0) parts.push('(' + digits.substring(0, 3))
@@ -48,10 +86,10 @@ export default function PhoneInput({ field, value, onChange, theme }) {
 
   const handleBlur = () => {
     setIsFocused(false)
-    const rawDigits = (value || '').replace(/\D/g, '')
+    const rawDigits = (value || '').replace(REGEX_DIGIT, '')
     if (required && !rawDigits) {
       setError('Phone number is required')
-    } else if (rawDigits && !phoneRegex.test(rawDigits)) {
+    } else if (rawDigits && !REGEX_PHONE.test(rawDigits)) {
       setError('Please enter a valid 10-digit phone number')
     } else {
       setError(null)
@@ -167,3 +205,5 @@ export default function PhoneInput({ field, value, onChange, theme }) {
     </div>
   )
 }
+
+// #endregion
