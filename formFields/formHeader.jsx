@@ -1,5 +1,45 @@
 'use client'
 
+// #region Types
+
+/**
+ * @typedef {'sm'|'md'|'lg'} FormHeaderSize
+ */
+
+/**
+ * @typedef FormHeaderInput
+ *
+ * @property {string} title
+ * @property {FormHeaderSize} size
+ * @property {boolean} [dividerAbove = false]
+ * @property {boolean} [dividerBelow = false]
+ */
+
+/**
+ * @typedef {field: FormHeaderInput} FormHeaderArguments
+ */
+
+// #endregion Types
+// #region Constants
+
+/**
+ * Map size prop to Tailwind classes
+ */
+const sizeClasses = {
+  sm: 'text-sm font-medium',
+  md: 'text-lg font-semibold',
+  lg: 'text-xl font-bold',
+}
+
+// #endregion
+
+// #region Components
+
+/**
+ * @param {FormHeaderArguments} param0
+ *
+ * @returns {JSX.Element}
+ */
 export default function FormHeader({ field }) {
   const {
     title,
@@ -7,13 +47,6 @@ export default function FormHeader({ field }) {
     dividerAbove = false,
     dividerBelow = false,
   } = field
-
-  // Map size prop to Tailwind classes
-  const sizeClasses = {
-    sm: 'text-sm font-medium',
-    md: 'text-lg font-semibold',
-    lg: 'text-xl font-bold',
-  }
 
   return (
     <div className="my-4">
@@ -29,3 +62,5 @@ export default function FormHeader({ field }) {
     </div>
   )
 }
+
+// #endregion
