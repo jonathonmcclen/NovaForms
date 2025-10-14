@@ -222,10 +222,3 @@ If Nova Forms helps you ship faster or cleaner React code:
 - [ ] Better documentation with examples gallery
 
 ---
-
-```
-
----
-
-Would you like me to make this **auto-format and badge-resolve correctly for GitHub** (e.g. correct URLs for your repo badges and license link) so it’s copy-paste ready for your actual repo page?
-```
