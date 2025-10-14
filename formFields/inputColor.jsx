@@ -1,5 +1,34 @@
 'use client'
 
+// #region Types
+
+/**
+ * @typedef InputColorInput
+ *
+ * @property {string} name
+ * @property {string} title
+ * @property {string} description
+ * @property {boolean} optional
+ * @property {string} error
+ **/
+
+/**
+ * @typedef InputColorArguments
+ *
+ * @property {InputColorInput} field
+ * @property {string} value
+ * @property {(value: string) => void} onChange
+ */
+
+// #endregion
+
+// #region Components
+
+/**
+ * @param {InputColorArguments} args
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputColor({ field, value, onChange }) {
   const { name, title, description, optional, error } = field
 
@@ -69,3 +98,5 @@ export default function InputColor({ field, value, onChange }) {
     </div>
   )
 }
+
+// #endregion

@@ -3,6 +3,52 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/** @import { Dispatch, SetStateAction } from 'react' */
+
+// #region Types
+
+/**
+ * @typedef EmailInput
+ *
+ * @property {string} name
+ * @property {string} title
+ * @property {string} [placeholder] (Optional)
+ * @property {string} description
+ * @property {boolean} required
+ * @property {any} helper TODO: Resolve type.
+ * @property {any} leadingIcon FIXME: Not sure if string, boolean, or component.
+ * @property {any} trailingIcon FIXME: Not sure if string, boolean, or component.
+ */
+
+/**
+ * @typedef EmailInputArguments
+ *
+ * @property {EmailInput} field
+ * @property {string} value
+ * @property {() => void} onChange
+ * @property {any} theme TODO: Implement theme type.
+ */
+
+// #endregion
+
+// #region Constants
+
+/**
+ * @type {RegEx}
+ *
+ * Basic but solid email regex
+ */
+const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+// #endregion
+
+// #region Components
+
+/**
+ *
+ * @param {EmailInputArguments} param0
+ * @returns {JSX.Element}
+ */
 export default function EmailInput({ field, value, onChange, theme }) {
   const {
     name,
@@ -16,6 +62,8 @@ export default function EmailInput({ field, value, onChange, theme }) {
   } = field
 
   const [isFocused, setIsFocused] = useState(false)
+
+  /** @type {[string|null, Dispatch<SetStateAction<string|null>>]} */
   const [error, setError] = useState(null)
 
   const hasError = Boolean(error)
@@ -26,15 +74,12 @@ export default function EmailInput({ field, value, onChange, theme }) {
       ? theme.inputFocusBorder
       : theme.inputBorder
 
-  // Basic but solid email regex
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
   const handleBlur = () => {
     setIsFocused(false)
 
     if (required && !value) {
       setError('Email is required')
-    } else if (value && !emailRegex.test(value)) {
+    } else if (value && !REGEX_EMAIL.test(value)) {
       setError('Please enter a valid email address')
     } else {
       setError(null)
@@ -147,3 +192,5 @@ export default function EmailInput({ field, value, onChange, theme }) {
     </div>
   )
 }
+
+// #endregion
