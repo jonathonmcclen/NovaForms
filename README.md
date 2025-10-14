@@ -1,149 +1,224 @@
-Got it 👍 — you’ve basically built a schema-driven form engine where:
+# 🪶 Nova Forms
 
-* **`createFormHandler`** handles controlled input state + modifiers.
-* **`evaluateCondition`** is the rules engine.
-* **`ReturnFieldsV2`** is the renderer that decides *what UI component to show* for a given schema field type.
+**Dynamic React forms powered by JSON schemas, modifiers, and subforms.**  
+Create complex, adaptive form systems without boilerplate — designed for scale, simplicity, and composability.
 
-You’re right to think about packaging this as a library. The biggest concern isn’t *classes vs functions* (modern React is mostly function-based anyway) — it’s **extensibility** and **developer ergonomics**.
-
-Here’s how I’d approach turning this into a publishable library without a huge refactor:
+[![npm version](https://img.shields.io/npm/v/nova-forms.svg)](https://www.npmjs.com/package/nova-forms)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build](https://github.com/jonathonmcclendon/NovaForms/actions/workflows/build.yml/badge.svg)](https://github.com/jonathonmcclendon/NovaForms/actions)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/jonathonmcclendon/NovaForms/issues)
 
 ---
 
-### 1. Make field rendering pluggable
+## ⚙️ Installation
 
-Right now, `ReturnFieldsV2` has a big `switch(type)` statement.
-If a dev wants to add a new field (say `qrCodeScanner`), they’d have to **fork** your code.
-
-👉 Instead, turn the field registry into a map that can be extended:
-
-```js
-// core/fieldRegistry.js
-const fieldRegistry = {}
-
-export function registerField(type, component) {
-  fieldRegistry[type] = component
-}
-
-export function getField(type) {
-  return fieldRegistry[type]
-}
-
-export function getAllFields() {
-  return { ...fieldRegistry }
-}
+```bash
+npm install nova-forms
+# or
+yarn add nova-forms
 ```
 
-Then, in your `ReturnFieldsV2`, replace the switch with:
+Nova Forms requires **React 18+** and **React DOM 18+** as peer dependencies.
+
+---
+
+## 🚀 Quick Start
+
+The simplest way to get started:
 
 ```jsx
-const FieldComponent = getField(type)
+import { NovaForm } from "nova-forms";
 
-if (!FieldComponent) return null
+const schema = {
+  fields: [
+    { name: "firstName", label: "First Name", type: "text" },
+    { name: "email", label: "Email", type: "email" },
+    { name: "subscribe", label: "Subscribe?", type: "checkbox" },
+  ],
+};
 
-return (
-  <FieldComponent
-    field={field}
-    value={value}
-    onChange={onChange}
-    theme={mergedTheme}
-  />
-)
-```
-
-This lets users do:
-
-```js
-import { registerField } from 'your-lib'
-
-registerField('qrCodeScanner', MyQrScannerComponent)
-```
-
-and now it’s available in JSON schemas with `type: 'qrCodeScanner'`.
-
----
-
-### 2. Keep the handler as a utility
-
-`createFormHandler` is already generic and doesn’t need to be a class.
-You can package it as:
-
-```js
-import { createFormHandler } from 'your-lib/handlers'
-```
-
-If someone wants to override `evaluateCondition`, just let them inject it:
-
-```js
-createFormHandler({ setState, fields, evaluator: myCustomEvaluator })
-```
-
----
-
-### 3. Use hooks for power-users
-
-Many React devs will expect a hook API. You can wrap your existing functions:
-
-```js
-export function useForm({ initialState = {}, fields = [] }) {
-  const [formData, setFormData] = useState(initialState)
-
-  const handleChange = useMemo(
-    () => createFormHandler({ setState: setFormData, fields }),
-    [fields]
-  )
-
-  return { formData, setFormData, handleChange }
+export default function App() {
+  return (
+    <NovaForm
+      schema={schema}
+      onSubmit={(data) => console.log("Form submitted:", data)}
+    />
+  );
 }
 ```
 
-Now usage looks like:
+---
+
+## ✨ Features
+
+- ⚡ **JSON-driven** — define forms using simple schema objects
+- 🧩 **Composable** — each field is a reusable React component
+- 🔄 **Modifiers & conditional logic** — dynamic show/hide, enable/disable, and validation
+- 🧠 **Hooks-first API** — integrate easily with your app state
+- 🧱 **Subforms** — nested or repeated field groups are first-class citizens
+- 🎨 **Theming-ready** — customize UI with Tailwind, Chakra, or your own design system
+- 🔌 **Extensible** — register your own field components via `registerField()`
+
+---
+
+## 🧩 Example: Registering Custom Fields
+
+You can extend Nova Forms with your own field types:
 
 ```jsx
-const { formData, handleChange } = useForm({ fields, initialState })
+import { registerField } from "nova-forms";
 
-<ReturnFieldsV2
-  field={field}
-  value={formData[field.name]}
-  onChange={handleChange}
-/>
+function QRCodeScannerField({ field, value, onChange }) {
+  return (
+    <div>
+      <p>Scan QR Code for {field.label}</p>
+      {/* Your scanner logic */}
+    </div>
+  );
+}
+
+registerField("qrScanner", QRCodeScannerField);
 ```
 
----
-
-### 4. Export a theme system
-
-You already have a `defaultTheme`. Allow users to provide their own overrides globally:
+Now use it in your schema:
 
 ```js
-let theme = defaultTheme
-
-export function setTheme(overrides) {
-  theme = { ...theme, ...overrides }
-}
-
-export function getTheme() {
-  return theme
+{
+  name: "eventCheckIn",
+  label: "Check In",
+  type: "qrScanner",
 }
 ```
 
 ---
 
-### 5. Packaging strategy
+## 🧠 API Overview
 
-* Keep components in `src/fields/`
-* Keep handlers in `src/handlers/`
-* Keep utilities in `src/utils/`
-* Barrel export from `index.js`
+### `NovaForm`
 
-That way devs can `import { useForm, ReturnFieldsV2 } from 'formantic'`.
+Renders a form based on your JSON schema.
 
----
-
-✅ **No need to rewrite in classes.**
-Your function-based approach is modern and React-idiomatic.
-Just make the **registry extensible** and provide a **hook** API.
+| Prop           | Type                  | Description                                     |
+| -------------- | --------------------- | ----------------------------------------------- |
+| `schema`       | `object`              | The schema that defines fields and their layout |
+| `onSubmit`     | `function`            | Callback fired with form data on submit         |
+| `theme`        | `object` _(optional)_ | Custom theme overrides                          |
+| `initialState` | `object` _(optional)_ | Prefilled form values                           |
 
 ---
 
-Would you like me to sketch out a **minimal folder + export structure** (like `src/index.ts`) so you can drop this into a library and `pnpm publish` right away?
+### `useForm()`
+
+React hook to manage state manually in custom renderers.
+
+```jsx
+import { useForm } from "nova-forms";
+
+const { formData, handleChange } = useForm({ fields, initialState });
+```
+
+---
+
+### `registerField(type, component)`
+
+Registers a custom input component available to all Nova Forms.
+
+---
+
+### `setTheme(overrides)`
+
+Globally override the form theme.
+
+```js
+import { setTheme } from "nova-forms";
+
+setTheme({
+  input: { className: "bg-gray-100 border border-gray-300" },
+});
+```
+
+---
+
+## 🧱 Architecture Overview
+
+Nova Forms is organized for **extensibility** and **maintainability**:
+
+```
+src/
+├── core/              → form logic, registry, evaluation
+├── hooks/             → React hooks (e.g. useForm)
+├── formFields/        → built-in field components
+├── components/        → NovaForm renderer, theming, helpers
+├── theme/             → theme context and defaults
+└── utils/             → shared utilities
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome pull requests and feature suggestions!
+
+1. Fork the repo
+2. Create a feature branch
+
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+
+3. Commit your changes
+
+   ```bash
+   git commit -m "Add new feature"
+   ```
+
+4. Push to your branch
+
+   ```bash
+   git push origin feature/your-feature
+   ```
+
+5. Open a pull request
+
+> 🔒 Only approved code owners can merge to main.
+> See `.github/CODEOWNERS` for details.
+
+---
+
+## 🪪 License
+
+Licensed under the [MIT License](LICENSE).
+Copyright © 2025 [Jonathon McClendon](https://github.com/jonathonmcclendon)
+
+---
+
+## 💡 Maintained by
+
+**Jonathon McClendon**
+Creator of Nova Forms — building high-performance tools for scalable React ecosystems.
+
+---
+
+### 🌟 Support the Project
+
+If Nova Forms helps you ship faster or cleaner React code:
+
+- ⭐ Star the repo
+- 🐛 Open an issue for bugs or feature ideas
+- 💬 Share it with other developers
+
+---
+
+> _“A form library that feels invisible — flexible, composable, and future-proof.”_
+
+---
+
+### 🧭 Next Steps (Roadmap Ideas)
+
+- [ ] TypeScript definitions (`index.d.ts`)
+- [ ] Built-in validation layer (Yup / Zod integration)
+- [ ] Advanced theming system (context-aware)
+- [ ] Field group templates (grid layouts)
+- [ ] Better documentation with examples gallery
+
+---
