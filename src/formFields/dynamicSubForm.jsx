@@ -1,81 +1,81 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { ReturnFieldsV2 } from './returnFields'
+import { useEffect, useState } from "react";
+import { ReturnFieldsV2 } from "../returnFields.jsx";
 
 export default function DynamicSubForm({
   fields,
   onSave,
-  title = 'Item',
+  title = "Item",
   value = [],
 }) {
-  const [objFields, setObjFields] = useState([])
-  const [valueArray, setValueArray] = useState([])
-  const [isDirty, setIsDirty] = useState(false)
-  const singular = title.endsWith('s') ? title.slice(0, -1) : title
+  const [objFields, setObjFields] = useState([]);
+  const [valueArray, setValueArray] = useState([]);
+  const [isDirty, setIsDirty] = useState(false);
+  const singular = title.endsWith("s") ? title.slice(0, -1) : title;
 
   useEffect(() => {
     if (fields && fields.length > 0) {
-      setObjFields(fields)
+      setObjFields(fields);
     } else {
       setObjFields([
-        { name: 'profileImg', type: 'fileV2', title: 'Profile Image' },
-        { name: 'altText', type: 'string', title: 'Image Alt Text' },
-      ])
+        { name: "profileImg", type: "fileV2", title: "Profile Image" },
+        { name: "altText", type: "string", title: "Image Alt Text" },
+      ]);
     }
 
     // Initialize valueArray with existing values
     if (Array.isArray(value)) {
-      setValueArray(value)
+      setValueArray(value);
     }
-  }, [fields, value])
+  }, [fields, value]);
 
-  const markDirty = () => setIsDirty(true)
+  const markDirty = () => setIsDirty(true);
 
   const handleAddBtn = () => {
-    setValueArray((prev) => [...prev, {}])
-    markDirty()
-  }
+    setValueArray((prev) => [...prev, {}]);
+    markDirty();
+  };
 
   const handleFieldChange = (index, e) => {
-    const { name, value } = e.target
-    const updated = [...valueArray]
-    updated[index] = { ...updated[index], [name]: value }
-    setValueArray(updated)
-    markDirty()
-  }
+    const { name, value } = e.target;
+    const updated = [...valueArray];
+    updated[index] = { ...updated[index], [name]: value };
+    setValueArray(updated);
+    markDirty();
+  };
 
   const handleRemove = (index) => {
-    const updated = [...valueArray]
-    updated.splice(index, 1)
-    setValueArray(updated)
-    markDirty()
-  }
+    const updated = [...valueArray];
+    updated.splice(index, 1);
+    setValueArray(updated);
+    markDirty();
+  };
 
   const moveUp = (index) => {
-    if (index === 0) return
-    const updated = [...valueArray]
-    const temp = updated[index - 1]
-    updated[index - 1] = updated[index]
-    updated[index] = temp
-    setValueArray(updated)
-    markDirty()
-  }
+    if (index === 0) return;
+    const updated = [...valueArray];
+    const temp = updated[index - 1];
+    updated[index - 1] = updated[index];
+    updated[index] = temp;
+    setValueArray(updated);
+    markDirty();
+  };
 
   const moveDown = (index) => {
-    if (index === valueArray.length - 1) return
-    const updated = [...valueArray]
-    const temp = updated[index + 1]
-    updated[index + 1] = updated[index]
-    updated[index] = temp
-    setValueArray(updated)
-    markDirty()
-  }
+    if (index === valueArray.length - 1) return;
+    const updated = [...valueArray];
+    const temp = updated[index + 1];
+    updated[index + 1] = updated[index];
+    updated[index] = temp;
+    setValueArray(updated);
+    markDirty();
+  };
 
   const handleSave = () => {
-    onSave?.(valueArray)
-    setIsDirty(false)
-  }
+    onSave?.(valueArray);
+    setIsDirty(false);
+  };
 
   return (
     <>
@@ -99,11 +99,11 @@ export default function DynamicSubForm({
             onClick={handleSave}
             className={`rounded px-4 py-2 text-white transition ${
               isDirty
-                ? 'bg-yellow-500 hover:bg-yellow-600'
-                : 'bg-green-600 hover:bg-green-700'
+                ? "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-green-600 hover:bg-green-700"
             }`}
           >
-            {isDirty ? 'Save Changes ✱' : 'Saved ✅'}
+            {isDirty ? "Save Changes ✱" : "Saved ✅"}
           </button>
         </div>
 
@@ -145,7 +145,7 @@ export default function DynamicSubForm({
                 <ReturnFieldsV2
                   key={fIndex}
                   field={field}
-                  value={entry[field.name] || ''}
+                  value={entry[field.name] || ""}
                   onChange={(e) => handleFieldChange(index, e)}
                 />
               </>
@@ -154,5 +154,5 @@ export default function DynamicSubForm({
         ))}
       </div>
     </>
-  )
+  );
 }

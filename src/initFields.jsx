@@ -1,5 +1,5 @@
-import * as Inputs from "./formFields/barrel";
-import { registerField } from "./core/fieldRegistry";
+import * as Inputs from "./formFields/barrel.js";
+import { registerField } from "./core/fieldRegistry.js";
 
 registerField("string", Inputs.InputDefault);
 registerField("text", Inputs.InputTextArea);

@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ExclamationCircleIcon, StarIcon } from '@heroicons/react/16/solid'
-import ReturnSecIcon from '@/app/account/pages/[slug]/returnSecIcon'
+import { useState } from "react";
+import { ExclamationCircleIcon, StarIcon } from "@heroicons/react/16/solid";
+import ReturnIcon from "../utils/returnHeroIcon.jsx";
 
 export default function RatingInput({ field, value, onChange, theme }) {
   const {
@@ -12,36 +12,36 @@ export default function RatingInput({ field, value, onChange, theme }) {
     required,
     helper,
     max = 5, // default rating scale
-    icon = 'StarIcon', // default icon (must match one in ReturnSecIcon)
-  } = field
+    icon = "StarIcon", // default icon (must match one in ReturnSecIcon)
+  } = field;
 
-  const [error, setError] = useState(null)
-  const [hoverValue, setHoverValue] = useState(null)
+  const [error, setError] = useState(null);
+  const [hoverValue, setHoverValue] = useState(null);
 
-  const hasError = Boolean(error)
+  const hasError = Boolean(error);
 
   const handleSelect = (val) => {
     if (required && val === 0) {
-      setError('Rating is required')
+      setError("Rating is required");
     } else {
-      setError(null)
+      setError(null);
     }
-    onChange({ target: { name, value: val } })
-  }
+    onChange({ target: { name, value: val } });
+  };
 
   const renderIcon = (index) => {
     const isFilled = hoverValue
       ? index <= hoverValue // while hovering
-      : index <= (value || 0) // after click
+      : index <= (value || 0); // after click
 
-    let color
+    let color;
     if (hoverValue) {
-      color = index <= hoverValue ? theme.inputFocusBorder : theme.inputBorder
+      color = index <= hoverValue ? theme.inputFocusBorder : theme.inputBorder;
     } else {
-      color = isFilled ? theme.inputBackground : theme.inputBorder
+      color = isFilled ? theme.inputBackground : theme.inputBorder;
     }
 
-    const Icon = icon === 'StarIcon' ? StarIcon : ReturnSecIcon
+    const Icon = icon === "StarIcon" ? StarIcon : ReturnIcon;
 
     return (
       <button
@@ -53,14 +53,14 @@ export default function RatingInput({ field, value, onChange, theme }) {
         className="p-1"
         aria-label={`Rate ${index} out of ${max}`}
       >
-        {icon === 'StarIcon' ? (
+        {icon === "StarIcon" ? (
           <Icon className="h-6 w-6" style={{ color }} />
         ) : (
-          <ReturnSecIcon name={icon} color={color} />
+          <ReturnIcon name={icon} color={color} />
         )}
       </button>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -96,7 +96,7 @@ export default function RatingInput({ field, value, onChange, theme }) {
         id={name}
         role="radiogroup"
         className="flex items-center gap-1"
-        aria-invalid={hasError ? 'true' : 'false'}
+        aria-invalid={hasError ? "true" : "false"}
         aria-describedby={
           hasError
             ? `${name}-error`
@@ -133,5 +133,5 @@ export default function RatingInput({ field, value, onChange, theme }) {
         </p>
       ) : null}
     </div>
-  )
+  );
 }
