@@ -1,8 +1,3 @@
-Perfect — now that I have that context (that you want a **complete, publish-ready `README.md`** for your GitHub repo based on that architecture), here’s a **professional, comprehensive version** optimized for GitHub display, NPM discoverability, and onboarding contributors.
-
----
-
-````markdown
 # 🪶 Nova Forms
 
 **Dynamic React forms powered by JSON schemas, modifiers, and subforms.**  
@@ -22,7 +17,6 @@ npm install nova-forms
 # or
 yarn add nova-forms
 ```
-````
 
 Nova Forms requires **React 18+** and **React DOM 18+** as peer dependencies.
 
