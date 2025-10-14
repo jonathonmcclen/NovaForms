@@ -1,4 +1,4 @@
-import { applyModifierType } from './applyModifierType'
+import { applyModifierType } from '../utils/applyModifierType'
 
 /**
  * createFormHandler - generic onChange handler for dynamic forms
