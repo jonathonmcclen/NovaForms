@@ -36,7 +36,8 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx", // Add JS and JSX files to the include array
-    "src/components/formFields/helpers"
+    "src/components/formFields/helpers",
+    "vite.config.mjs"
   ],
   "exclude": ["node_modules"]
 }
