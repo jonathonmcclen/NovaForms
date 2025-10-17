@@ -25,15 +25,20 @@ export function ReturnFieldsV2({ field, onChange, value, theme }) {
 
   const mergedTheme = { ...defaultTheme, ...(theme || {}) };
 
-  const handleCustomChange = (name, newValue) => {
-    if (onChange) {
-      onChange({
-        target: {
-          name,
-          value: newValue,
-        },
-      });
+  const handleCustomChange = (eOrValue) => {
+    if (!onChange) return;
+    // If a real/synthetic event is passed through from a field, forward it directly
+    if (eOrValue && eOrValue.target) {
+      onChange(eOrValue);
+      return;
     }
+    // Otherwise, normalize to a synthetic event-like shape
+    onChange({
+      target: {
+        name: field.name,
+        value: eOrValue,
+      },
+    });
   };
 
   const renderField = (subField, subValue, index, handleChange) => {
@@ -61,7 +66,7 @@ export function ReturnFieldsV2({ field, onChange, value, theme }) {
         fields={field.fields}
         value={Array.isArray(value) ? value : []}
         title={field.title || field.name}
-        onSave={(newVal) => handleCustomChange(field.name, newVal)}
+        onSave={(newVal) => handleCustomChange(newVal)}
         renderField={renderField} // pass renderField for nested recursion
         theme={mergedTheme}
       />
@@ -73,7 +78,7 @@ export function ReturnFieldsV2({ field, onChange, value, theme }) {
     <FieldComponent
       field={field}
       value={value}
-      onChange={(val) => handleCustomChange(field.name, val)}
+      onChange={handleCustomChange}
       theme={mergedTheme}
     />
   );

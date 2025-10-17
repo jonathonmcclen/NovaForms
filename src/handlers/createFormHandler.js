@@ -7,7 +7,15 @@ import { applyModifierType } from '../utils/applyModifierType'
  * @param {Function} setState - React setState function
  * @param {Array} fields - array of field definitions (JSON schema)
  */
-export function createFormHandler({ setState, fields = [] }) {
+export function createFormHandler({ setState, fields = [], rules = [] }) {
+  
+  const ruleNameToRule = Array.isArray(rules)
+    ? rules.reduce((acc, r) => {
+        if (r?.name) acc[r.name] = r
+        return acc
+      }, {})
+    : {}
+
   return function handleChange(eOrValue, fieldName) {
     let name, value, type, checked, files
 
@@ -28,11 +36,11 @@ export function createFormHandler({ setState, fields = [] }) {
     if (type === 'file') value = files?.[0] ?? value
 
     setState((prev) => {
-      const newData = { ...prev, [name]: value }
+      let newData = { ...prev, [name]: value }
 
       const fieldDef = fields.find((f) => f.name === name)
 
-      // Apply array-based modifiers if they exist
+      // Legacy per-field modifiers (backward compatible)
       if (fieldDef?.modifiers?.length) {
         fieldDef.modifiers.forEach((modifier) => {
           const {
@@ -43,6 +51,8 @@ export function createFormHandler({ setState, fields = [] }) {
             value: ruleValue,
             strictString = false,
           } = modifier
+
+          if (!target) return
 
           if (evaluateCondition(value, when, ruleValue)) {
             const targetVal = strictString
@@ -55,10 +65,60 @@ export function createFormHandler({ setState, fields = [] }) {
               kind,
               targetValue: targetVal,
               modifierValue: modVal,
+              strictString,
             })
           }
         })
       }
+
+      // New top-level rules triggered by field-level triggers
+      const triggers = Array.isArray(fieldDef?.triggers) ? fieldDef.triggers : []
+      triggers.forEach((trigger) => {
+        const ruleName = trigger?.rule
+        if (!ruleName) return
+        const rule = ruleNameToRule[ruleName]
+        if (!rule) return
+
+        // Simplified trigger condition - no need for field property since we know which field triggered
+        const whenCondition = trigger.when
+        const isActive = evaluateCondition(value, whenCondition, trigger.value)
+        if (!isActive) return
+
+        // Apply rule effects that target field values
+        const effects = Array.isArray(rule.effects) ? rule.effects : []
+        effects.forEach((effect) => {
+          const { targetField, prop = 'value', type, kind = 'number', value: effVal, strictString = false, sourceFields } = effect
+          if (!targetField) return
+          if (prop !== 'value') return // only values handled here; attributes handled in renderer
+
+          // Prepare sourceFields with actual field values for concat operations
+          let processedSourceFields = null
+          if (type === 'concat' && Array.isArray(sourceFields)) {
+            processedSourceFields = sourceFields.map(source => ({
+              ...source,
+              fieldValue: newData[source.field] || ''
+            }))
+          }
+
+          // Get current value of the target field
+          const currentTarget = newData[targetField] || ''
+          const targetVal = strictString
+            ? String(currentTarget)
+            : Number(currentTarget) || 0
+          
+          // Use the effect value
+          const modVal = strictString ? String(effVal) : Number(effVal)
+          
+          newData[targetField] = applyModifierType({
+            type,
+            kind,
+            targetValue: targetVal,
+            modifierValue: modVal,
+            strictString,
+            sourceFields: processedSourceFields,
+          })
+        })
+      })
 
       return newData
     })
@@ -73,11 +133,20 @@ export function createFormHandler({ setState, fields = [] }) {
  */
 export function evaluateCondition(triggerValue, when, value) {
   const numeric = Number(triggerValue)
+  
   switch (when) {
     case 'true':
       return !!triggerValue
     case 'false':
       return !triggerValue
+    case 'empty':
+      return !triggerValue || triggerValue === '' || triggerValue === null || triggerValue === undefined
+    case 'not empty':
+      return triggerValue && triggerValue !== '' && triggerValue !== null && triggerValue !== undefined
+    case 'null':
+      return triggerValue === null || triggerValue === undefined
+    case 'not null':
+      return triggerValue !== null && triggerValue !== undefined
     case 'less than':
       return numeric < Number(value)
     case 'greater than':

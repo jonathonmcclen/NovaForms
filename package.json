@@ -4,7 +4,6 @@
   "description": "Dynamic React forms with JSON schema, modifiers, and subforms",
   "main": "dist/nova-forms.cjs.js",
   "module": "dist/nova-forms.es.js",
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
