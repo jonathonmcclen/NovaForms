@@ -27,21 +27,24 @@ Nova Forms requires **React 18+** and **React DOM 18+** as peer dependencies.
 The simplest way to get started:
 
 ```jsx
+import { useState } from "react";
 import { NovaForm } from "nova-forms";
 
-const schema = {
-  fields: [
-    { name: "firstName", label: "First Name", type: "text" },
-    { name: "email", label: "Email", type: "email" },
-    { name: "subscribe", label: "Subscribe?", type: "checkbox" },
-  ],
-};
+const fields = [
+  { name: "firstName", label: "First Name", type: "string", width: 50 },
+  { name: "lastName", label: "Last Name", type: "string", width: 50 },
+  { name: "email", label: "Email", type: "email", width: 100 },
+  { name: "subscribe", label: "Subscribe?", type: "boolean", width: 100 },
+];
 
 export default function App() {
+  const [formData, setFormData] = useState({});
+
   return (
     <NovaForm
-      schema={schema}
-      onSubmit={(data) => console.log("Form submitted:", data)}
+      fields={fields}
+      value={formData}
+      onChange={setFormData}
     />
   );
 }
@@ -51,12 +54,12 @@ export default function App() {
 
 ## ✨ Features
 
-- ⚡ **JSON-driven** — define forms using simple schema objects
+- ⚡ **Controlled forms** — simple `value`/`onChange` pattern like React inputs
 - 🧩 **Composable** — each field is a reusable React component
-- 🔄 **Modifiers & conditional logic** — dynamic show/hide, enable/disable, and validation
-- 🧠 **Hooks-first API** — integrate easily with your app state
+- 🔄 **Modifiers & conditional logic** — dynamic show/hide and field dependencies
+- 📱 **Responsive layout** — automatic width handling with Tailwind classes
 - 🧱 **Subforms** — nested or repeated field groups are first-class citizens
-- 🎨 **Theming-ready** — customize UI with Tailwind, Chakra, or your own design system
+- 🎨 **Theming-ready** — customize UI with Tailwind or your own design system
 - 🔌 **Extensible** — register your own field components via `registerField()`
 
 ---
@@ -80,14 +83,17 @@ function QRCodeScannerField({ field, value, onChange }) {
 registerField("qrScanner", QRCodeScannerField);
 ```
 
-Now use it in your schema:
+Now use it in your fields array:
 
-```js
-{
-  name: "eventCheckIn",
-  label: "Check In",
-  type: "qrScanner",
-}
+```jsx
+const fields = [
+  {
+    name: "eventCheckIn",
+    label: "Check In",
+    type: "qrScanner",
+    width: 100
+  }
+];
 ```
 
 ---
@@ -96,45 +102,66 @@ Now use it in your schema:
 
 ### `NovaForm`
 
-Renders a form based on your JSON schema.
+Renders a form based on your field array with integrated modifiers and conditions.
 
 | Prop           | Type                  | Description                                     |
 | -------------- | --------------------- | ----------------------------------------------- |
-| `schema`       | `object`              | The schema that defines fields and their layout |
-| `onSubmit`     | `function`            | Callback fired with form data on submit         |
+| `fields`       | `array`               | Array of field definitions                      |
+| `value`        | `object`              | Form data object (controlled)                   |
+| `onChange`     | `function`            | Callback fired with updated form data           |
 | `theme`        | `object` _(optional)_ | Custom theme overrides                          |
-| `initialState` | `object` _(optional)_ | Prefilled form values                           |
+| `isMobileView` | `boolean` _(optional)_ | Force mobile layout (full width)               |
 
----
+### Field Schema
 
-### `useForm()`
+Each field object supports:
 
-React hook to manage state manually in custom renderers.
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | `string` | Field name (required) |
+| `type` | `string` | Field type (string, email, boolean, etc.) |
+| `label` | `string` | Display label |
+| `width` | `number` | Width percentage (25, 50, 75, 100) |
+| `default` | `any` | Default value |
+| `readOnly` | `boolean` | Make field read-only |
+| `modifiers` | `array` | Array of modifier rules |
+| `conditions` | `object` | Show/hide and disable conditions |
+
+### Modifiers
+
+Modifiers automatically update dependent fields:
 
 ```jsx
-import { useForm } from "nova-forms";
-
-const { formData, handleChange } = useForm({ fields, initialState });
+{
+  name: "firstName",
+  type: "string",
+  modifiers: [
+    {
+      target: "fullName",
+      type: "concat",
+      when: "true",
+      value: " " // adds space
+    }
+  ]
+}
 ```
 
----
+### Conditions
 
-### `registerField(type, component)`
+Control field visibility and state:
 
-Registers a custom input component available to all Nova Forms.
-
----
-
-### `setTheme(overrides)`
-
-Globally override the form theme.
-
-```js
-import { setTheme } from "nova-forms";
-
-setTheme({
-  input: { className: "bg-gray-100 border border-gray-300" },
-});
+```jsx
+{
+  name: "subscribe",
+  type: "boolean",
+  conditions: {
+    hiddenWhen: {
+      field: "age",
+      when: "less than",
+      value: 18
+    }
+  }
+}
 ```
 
 ---
@@ -145,12 +172,55 @@ Nova Forms is organized for **extensibility** and **maintainability**:
 
 ```
 src/
-├── core/              → form logic, registry, evaluation
-├── hooks/             → React hooks (e.g. useForm)
+├── core/              → field registry and evaluation
 ├── formFields/        → built-in field components
-├── components/        → NovaForm renderer, theming, helpers
-├── theme/             → theme context and defaults
-└── utils/             → shared utilities
+├── handlers/          → form handlers and modifiers
+├── utils/             → shared utilities
+├── NovaForm.jsx       → main form component
+└── returnFields.jsx   → field renderer
+```
+
+---
+
+## 🔄 Migration from Manual Field Mapping
+
+If you're currently mapping fields manually:
+
+**Before:**
+```jsx
+import { ReturnFieldsV2, createFormHandler, initializeFormData } from "nova-forms";
+
+const [formData, setFormData] = useState(() => initializeFormData(fields));
+const handleChange = createFormHandler({ fields, setState: setFormData });
+
+return (
+  <div className="-mx-2 flex flex-wrap">
+    {fields.map((field) => (
+      <div key={field.name} className={`${getWidthClass(field.width)} mb-4 px-2`}>
+        <ReturnFieldsV2
+          field={field}
+          value={formData[field.name]}
+          onChange={handleChange}
+        />
+      </div>
+    ))}
+  </div>
+);
+```
+
+**After:**
+```jsx
+import { NovaForm } from "nova-forms";
+
+const [formData, setFormData] = useState({});
+
+return (
+  <NovaForm
+    fields={fields}
+    value={formData}
+    onChange={setFormData}
+  />
+);
 ```
 
 ---
@@ -209,16 +279,16 @@ If Nova Forms helps you ship faster or cleaner React code:
 
 ---
 
-> _“A form library that feels invisible — flexible, composable, and future-proof.”_
+> _"A form library that feels invisible — flexible, composable, and future-proof."_
 
 ---
 
 ### 🧭 Next Steps (Roadmap Ideas)
 
-- [ ] TypeScript definitions (`index.d.ts`)
-- [ ] Built-in validation layer (Yup / Zod integration)
-- [ ] Advanced theming system (context-aware)
+- [ ] Advanced validation layer (Yup / Zod integration)
+- [ ] Enhanced theming system (context-aware)
 - [ ] Field group templates (grid layouts)
 - [ ] Better documentation with examples gallery
+- [ ] TypeScript definitions (optional)
 
 ---

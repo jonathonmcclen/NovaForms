@@ -4,3 +4,5 @@ import "./initFields";
 export { ReturnFieldsV2 } from "./returnFields";
 export { createFormHandler } from "./handlers/createFormHandler";
 export { registerField, getField, getAllFields } from "./core/fieldRegistry";
+export { NovaForm } from "./NovaForm.jsx";
+export { initializeFormData } from "./utils/initializeFormData";
