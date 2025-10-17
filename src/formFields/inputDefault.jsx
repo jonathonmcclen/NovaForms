@@ -15,6 +15,7 @@ export default function InputDefault({ field, value, onChange, theme }) {
     helper,
     leadingIcon: LeadingIcon,
     trailingIcon: TrailingIcon,
+    pattern, // string | RegExp | Array<{ regex, message } | string>
   } = field
 
   const [isFocused, setIsFocused] = useState(false)
@@ -26,6 +27,25 @@ export default function InputDefault({ field, value, onChange, theme }) {
     : isFocused
       ? theme.inputFocusBorder
       : theme.inputBorder
+
+  // Pattern validation (client-side, non-blocking display)
+  let patternError = ''
+  if (pattern) {
+    const checks = Array.isArray(pattern) ? pattern : [pattern]
+    for (const p of checks) {
+      const re = typeof p === 'object' && p?.regex ? p.regex : p
+      const msg = typeof p === 'object' && p?.message ? p.message : 'Invalid format'
+      try {
+        const regex = re instanceof RegExp ? re : new RegExp(re)
+        if (!regex.test(String(value || ''))) {
+          patternError = msg
+          break
+        }
+      } catch (e) {
+        // invalid regex, ignore gracefully
+      }
+    }
+  }
 
   return (
     <div>
@@ -67,6 +87,8 @@ export default function InputDefault({ field, value, onChange, theme }) {
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          readOnly={field.readOnly === true}
+          aria-readonly={field.readOnly === true ? 'true' : 'false'}
           aria-invalid={hasError ? 'true' : 'false'}
           aria-describedby={
             hasError
@@ -115,13 +137,13 @@ export default function InputDefault({ field, value, onChange, theme }) {
       </div>
 
       {/* Error or Description */}
-      {hasError ? (
+      {hasError || patternError ? (
         <p
           id={`${name}-error`}
           style={{ color: theme.error }}
           className="mt-1 text-sm"
         >
-          {error}
+          {patternError || error}
         </p>
       ) : description ? (
         <p

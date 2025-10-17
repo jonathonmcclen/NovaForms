@@ -28,23 +28,28 @@ The simplest way to get started:
 
 ```jsx
 import { useState } from "react";
-import { NovaForm } from "nova-forms";
+import { NovaForm, createFormHandler } from "nova-forms";
 
 const fields = [
-  { name: "firstName", label: "First Name", type: "string", width: 50 },
-  { name: "lastName", label: "Last Name", type: "string", width: 50 },
-  { name: "email", label: "Email", type: "email", width: 100 },
-  { name: "subscribe", label: "Subscribe?", type: "boolean", width: 100 },
+  { name: "firstName", title: "First Name", type: "string", width: 50 },
+  { name: "lastName", title: "Last Name", type: "string", width: 50 },
+  { name: "email", title: "Email", type: "email", width: 100 },
+  { name: "subscribe", title: "Subscribe?", type: "boolean", width: 100 },
 ];
 
 export default function App() {
   const [formData, setFormData] = useState({});
 
+  const handleChange = createFormHandler({
+    fields,
+    setState: setFormData,
+  });
+
   return (
     <NovaForm
       fields={fields}
-      value={formData}
-      onChange={setFormData}
+      onChange={handleChange}
+      formData={formData}
     />
   );
 }
@@ -56,11 +61,52 @@ export default function App() {
 
 - ⚡ **Controlled forms** — simple `value`/`onChange` pattern like React inputs
 - 🧩 **Composable** — each field is a reusable React component
-- 🔄 **Modifiers & conditional logic** — dynamic show/hide and field dependencies
+- 🔄 **Advanced conditional logic** — dynamic show/hide, disable, and field dependencies
 - 📱 **Responsive layout** — automatic width handling with Tailwind classes
-- 🧱 **Subforms** — nested or repeated field groups are first-class citizens
+- 🧱 **Subforms & arrays** — nested or repeated field groups are first-class citizens
 - 🎨 **Theming-ready** — customize UI with Tailwind or your own design system
 - 🔌 **Extensible** — register your own field components via `registerField()`
+- 🧠 **Smart rules system** — powerful top-level rules with field-level triggers
+- 🔢 **Math operations** — automatic calculations with add, subtract, multiply, divide
+- 📝 **String operations** — concatenation and text manipulation
+- ✅ **Pattern validation** — client-side regex validation with custom messages
+- 🎯 **Multiple field types** — 20+ built-in field types from text to file uploads
+
+---
+
+## 🎯 Built-in Field Types
+
+Nova Forms comes with 20+ field types ready to use:
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `string` | Text input | `{ type: "string", title: "Name" }` |
+| `text` | Textarea | `{ type: "text", title: "Description" }` |
+| `email` | Email input with validation | `{ type: "email", title: "Email" }` |
+| `tel` | Phone number input | `{ type: "tel", title: "Phone" }` |
+| `url` | URL input | `{ type: "url", title: "Website" }` |
+| `number` | Number input | `{ type: "number", title: "Age" }` |
+| `boolean` | Checkbox | `{ type: "boolean", title: "Subscribe" }` |
+| `toggle` | Toggle switch | `{ type: "toggle", title: "Enable" }` |
+| `date` | Date picker | `{ type: "date", title: "Birth Date" }` |
+| `datetime` | Date and time picker | `{ type: "datetime", title: "Event Time" }` |
+| `time` | Time picker | `{ type: "time", title: "Start Time" }` |
+| `color` | Color picker | `{ type: "color", title: "Theme Color" }` |
+| `select` | Single select dropdown | `{ type: "select", options: [...] }` |
+| `multiselect` | Multi-select dropdown | `{ type: "multiselect", options: [...] }` |
+| `radio` | Radio button group | `{ type: "radio", options: [...] }` |
+| `file` | File upload | `{ type: "file", title: "Upload" }` |
+| `fileV2` | Enhanced file upload | `{ type: "fileV2", title: "Photo" }` |
+| `uploadToBase` | Base64 image upload | `{ type: "uploadToBase", title: "Avatar" }` |
+| `array` | Dynamic subform/array | `{ type: "array", fields: [...] }` |
+| `subForm` | Nested form group | `{ type: "subForm", fields: [...] }` |
+| `signature` | Signature pad | `{ type: "signature", title: "Signature" }` |
+| `rating` | Star rating | `{ type: "rating", title: "Rating" }` |
+| `scale` | Likert scale | `{ type: "scale", title: "Satisfaction" }` |
+| `captcha` | reCAPTCHA | `{ type: "captcha" }` |
+| `header` | Section header | `{ type: "header", title: "Section" }` |
+| `paragraph` | Static text | `{ type: "paragraph", content: "Text" }` |
+| `image` | Static image | `{ type: "image", image: { src: "..." } }` |
 
 ---
 
@@ -74,7 +120,7 @@ import { registerField } from "nova-forms";
 function QRCodeScannerField({ field, value, onChange }) {
   return (
     <div>
-      <p>Scan QR Code for {field.label}</p>
+      <p>Scan QR Code for {field.title}</p>
       {/* Your scanner logic */}
     </div>
   );
@@ -89,7 +135,7 @@ Now use it in your fields array:
 const fields = [
   {
     name: "eventCheckIn",
-    label: "Check In",
+    title: "Check In",
     type: "qrScanner",
     width: 100
   }
@@ -107,10 +153,20 @@ Renders a form based on your field array with integrated modifiers and condition
 | Prop           | Type                  | Description                                     |
 | -------------- | --------------------- | ----------------------------------------------- |
 | `fields`       | `array`               | Array of field definitions                      |
-| `value`        | `object`              | Form data object (controlled)                   |
-| `onChange`     | `function`            | Callback fired with updated form data           |
+| `onChange`     | `function`            | Change handler (from createFormHandler)         |
+| `formData`     | `object`              | Form data object from parent state              |
 | `theme`        | `object` _(optional)_ | Custom theme overrides                          |
 | `isMobileView` | `boolean` _(optional)_ | Force mobile layout (full width)               |
+
+### `createFormHandler`
+
+Creates a change handler that manages state and applies modifiers.
+
+| Prop           | Type                  | Description                                     |
+| -------------- | --------------------- | ----------------------------------------------- |
+| `fields`       | `array`               | Array of field definitions                      |
+| `setState`     | `function`            | React setState function                         |
+| `rules`        | `array` _(optional)_  | Top-level rules referenced by field triggers    |
 
 ### Field Schema
 
@@ -120,16 +176,31 @@ Each field object supports:
 |----------|------|-------------|
 | `name` | `string` | Field name (required) |
 | `type` | `string` | Field type (string, email, boolean, etc.) |
-| `label` | `string` | Display label |
+| `title` | `string` | Display label (preferred over `label`) |
+| `label` | `string` | Display label (legacy, use `title`) |
 | `width` | `number` | Width percentage (25, 50, 75, 100) |
 | `default` | `any` | Default value |
 | `readOnly` | `boolean` | Make field read-only |
-| `modifiers` | `array` | Array of modifier rules |
-| `conditions` | `object` | Show/hide and disable conditions |
+| `required` | `boolean` | Mark field as required |
+| `placeholder` | `string` | Placeholder text |
+| `description` | `string` | Help text below field |
+| `helper` | `string` | Additional help text |
+| `error` | `string` | Error message to display |
+| `leadingIcon` | `Component` | Icon component before input |
+| `trailingIcon` | `Component` | Icon component after input |
+| `modifiers` | `array` | (Legacy) field-local modifiers for values |
+| `triggers` | `array` | Triggers that reference top-level rules |
+| `conditions.hiddenWhen` | `array or object` | Conditions to hide (rendered with `hidden` class) |
+| `conditions.hiddenMode` | `any or all` | Mode for hidden conditions (default any) |
+| `conditions.readOnlyWhen` | `array or object` | Conditions to set readOnly |
+| `conditions.readOnlyMode` | `any or all` | Mode for readOnly conditions (default any) |
+| `pattern` | `RegExp \| string \| Array<{ regex, message } \| string>` | Client-side pattern checks with messages |
+| `options` | `array` | Options for select, radio, multiselect fields |
+| `fields` | `array` | Sub-fields for array/subForm types |
 
-### Modifiers
+### Modifiers (legacy)
 
-Modifiers automatically update dependent fields:
+Field-local modifiers automatically update dependent field values. These are still supported for backward compatibility, but the preferred approach is to use top-level rules and field-level triggers.
 
 ```jsx
 {
@@ -163,6 +234,57 @@ Control field visibility and state:
   }
 }
 ```
+
+---
+
+### Rules & Triggers
+
+- Rules live at the top level and have unique names. A rule contains one or more effects that target a field and either change its value or attributes.
+- Triggers live on fields and reference a rule by name. When the trigger's conditions match, the rule's effects are applied.
+- Value effects are applied inside `createFormHandler`. Attribute effects (e.g., `hidden`, `readOnly`, `title`) are applied in `NovaForm`.
+
+Rules shape:
+
+```js
+const rules = [
+  {
+    name: "fullNameRule",
+    effects: [
+      { targetField: "displayName", prop: "value", type: "concat", kind: "string", value: " " },
+      { targetField: "age", prop: "readOnly", value: true },
+    ],
+  },
+];
+```
+
+Trigger shape on a field:
+
+```js
+{
+  name: "firstName",
+  type: "string",
+  triggers: [
+    {
+      rule: "fullNameRule",
+      when: [
+        { field: "firstName", when: "not empty" },
+        { field: "lastName", when: "not empty" },
+      ],
+      mode: "all", // all = AND, any = OR (default)
+    },
+  ],
+}
+```
+
+Pass `rules` to both `createFormHandler` and `NovaForm`:
+
+```jsx
+const handleChange = createFormHandler({ fields, rules, setState: setFormData });
+
+<NovaForm fields={fields} rules={rules} onChange={handleChange} formData={formData} />
+```
+
+Hidden fields remain mounted and use Tailwind's `hidden` class so values still update.
 
 ---
 
@@ -210,18 +332,37 @@ return (
 
 **After:**
 ```jsx
-import { NovaForm } from "nova-forms";
+import { NovaForm, createFormHandler } from "nova-forms";
 
 const [formData, setFormData] = useState({});
+const handleChange = createFormHandler({ fields, setState: setFormData });
 
 return (
   <NovaForm
     fields={fields}
-    value={formData}
-    onChange={setFormData}
+    onChange={handleChange}
+    formData={formData}
   />
 );
 ```
+
+---
+
+## 📚 Documentation
+
+For comprehensive guides and examples, see our documentation:
+
+- **[Introduction](documentation/intro.md)** - Complete overview of Nova Forms
+- **[Quick Start](documentation/quickstart.md)** - Get up and running quickly
+- **[createFormHandler](documentation/createFormHandler.md)** - Understanding the form handler system
+- **[Fields & Schemas](documentation/fields-schemas.md)** - Complete field reference and schema guide
+- **[Rules System](documentation/rules.md)** - Advanced rules and effects
+- **[Triggers & Conditions](documentation/triggers.md)** - Conditional logic and triggers
+- **[Dynamic Hide](documentation/dynamic-hide.md)** - Show/hide fields dynamically
+- **[Dynamic Disable](documentation/dynamic-disable.md)** - Enable/disable fields dynamically
+- **[Custom Fields](documentation/custom-fields.md)** - Creating and registering custom field types
+- **[Styling with Tailwind](documentation/styling-tailwind.md)** - Tailwind CSS integration
+- **[Theme Styling](documentation/styling-theme.md)** - Custom theming system
 
 ---
 

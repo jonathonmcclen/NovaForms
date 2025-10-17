@@ -4,15 +4,28 @@ export function applyModifierType({
   targetValue,
   modifierValue,
   strictString = false,
+  sourceFields,
 }) {
-  let result = targetValue
+  // Handle sourceFields array for concat operations
+  if (type === 'concat' && Array.isArray(sourceFields)) {
+    let concatResult = ''
+    sourceFields.forEach((source) => {
+      const fieldValue = String(source.fieldValue || '')
+      concatResult += (source.charBefore || '') + fieldValue + (source.charAfter || '')
+    })
+    return concatResult
+  }
 
-  const isNumericModifier = typeof modifierValue === 'number' && !strictString
+  // Auto-detect if we should do math operations
+  const isNumericValue = typeof modifierValue === 'number'
+  const shouldDoMath = isNumericValue && strictString !== true
 
-  if (isNumericModifier) {
+  if (shouldDoMath) {
+    // Math operations - convert target to number, do math, return as string
     const targetNum = Number(targetValue) || 0
     const modNum = Number(modifierValue)
 
+    let result
     switch (type) {
       case 'add':
         result = targetNum + modNum
@@ -29,11 +42,19 @@ export function applyModifierType({
       case 'replace':
         result = modNum
         break
+      case 'concat':
+        // If concat with number, treat as add
+        result = targetNum + modNum
+        break
     }
 
     if (kind === 'percent') result = (targetNum * modNum) / 100
+
+    return String(result)
   } else {
-    // String handling
+    // String operations - keep existing logic
+    let result = targetValue
+
     switch (type) {
       case 'concat':
       case 'add': // if both strings, treat add as concat
@@ -42,8 +63,14 @@ export function applyModifierType({
       case 'replace':
         result = String(modifierValue)
         break
+      case 'subtract':
+      case 'multiply':
+      case 'divide':
+        // For string operations, these don't make sense, just return target
+        result = String(targetValue)
+        break
     }
-  }
 
-  return String(result)
+    return String(result)
+  }
 }

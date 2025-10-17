@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ReturnFieldsV2 } from "./returnFields";
-import { initializeFormData } from "./utils/initializeFormData";
-import { applyModifierType } from "./utils/applyModifierType";
 import { evaluateCondition } from "./handlers/createFormHandler";
 
 function getWidthClass(width, isMobileView) {
@@ -19,140 +17,96 @@ function getWidthClass(width, isMobileView) {
   }
 }
 
-function applyModifiersForField({ fields, data, changedName, changedValue }) {
-  const nextData = { ...data };
-  const fieldDef = fields.find((f) => f.name === changedName);
-  if (!fieldDef || !Array.isArray(fieldDef.modifiers)) return nextData;
-
-  fieldDef.modifiers.forEach((modifier) => {
-    const {
-      target,
-      type,
-      kind = "number",
-      when,
-      value: ruleValue,
-      strictString = false,
-    } = modifier;
-
-    if (!target) return;
-
-    if (evaluateCondition(changedValue, when, ruleValue)) {
-      const targetVal = strictString
-        ? String(nextData[target] || "")
-        : Number(nextData[target] || 0);
-      const modVal = strictString ? String(ruleValue) : Number(ruleValue);
-
-      nextData[target] = applyModifierType({
-        type,
-        kind,
-        targetValue: targetVal,
-        modifierValue: modVal,
-        strictString,
-      });
-    }
-  });
-
-  return nextData;
+function evalCondList(list, mode, formData) {
+  const conds = Array.isArray(list) ? list : list ? [list] : [];
+  if (conds.length === 0) return false;
+  const match = (c) => evaluateCondition(formData?.[c.field], c.when, c.value);
+  return mode === "all" ? conds.every(match) : conds.some(match);
 }
 
-function applyAllModifiersOnce(fields, data) {
-  let next = { ...data };
+function isHidden(field, formData) {
+  const list = field?.conditions?.hiddenWhen;
+  const mode = field?.conditions?.hiddenMode === "all" ? "all" : "any";
+  return evalCondList(list, mode, formData);
+}
+
+function isReadOnly(field, formData) {
+  const list = field?.conditions?.readOnlyWhen || field?.conditions?.disabledWhen;
+  const mode = field?.conditions?.readOnlyMode === "all" ? "all" : "any";
+  return evalCondList(list, mode, formData);
+}
+
+function buildAttributeOverrides(fields, rules, formData) {
+  const nameToRule = Array.isArray(rules)
+    ? rules.reduce((acc, r) => {
+        if (r?.name) acc[r.name] = r;
+        return acc;
+      }, {})
+    : {};
+
+  const overrides = {};
   fields.forEach((f) => {
-    const currentValue = next[f.name];
-    next = applyModifiersForField({ fields, data: next, changedName: f.name, changedValue: currentValue });
+    const triggers = Array.isArray(f?.triggers) ? f.triggers : [];
+    triggers.forEach((trg) => {
+      const rule = nameToRule[trg?.rule];
+      if (!rule) return;
+      const conds = Array.isArray(trg.when) ? trg.when : trg.when ? [trg.when] : [];
+      const mode = trg.mode === "all" ? "all" : "any";
+      const active = conds.length === 0
+        ? true
+        : mode === "all"
+          ? conds.every((c) => evaluateCondition(formData?.[c.field], c.when, c.value))
+          : conds.some((c) => evaluateCondition(formData?.[c.field], c.when, c.value));
+      if (!active) return;
+
+      const effects = Array.isArray(rule.effects) ? rule.effects : [];
+      effects.forEach((eff) => {
+        const { targetField, prop = "value", value } = eff;
+        if (!targetField || prop === "value") return; // values handled by createFormHandler
+        overrides[targetField] = {
+          ...(overrides[targetField] || {}),
+          [prop]: value,
+        };
+      });
+    });
   });
-  return next;
-}
-
-function isHidden(field, data) {
-  const cond = field?.conditions?.hiddenWhen;
-  if (!cond) return false;
-  const trigger = data?.[cond.field];
-  return evaluateCondition(trigger, cond.when, cond.value);
-}
-
-function isDisabled(field, data) {
-  const cond = field?.conditions?.disabledWhen;
-  if (!cond) return false;
-  const trigger = data?.[cond.field];
-  return evaluateCondition(trigger, cond.when, cond.value);
+  return overrides;
 }
 
 export function NovaForm({
   fields = [],
-  value,
   onChange,
   theme,
   isMobileView = false,
+  formData = {},
+  rules = [],
 }) {
-  // On first mount (or when fields change), if value is empty/undefined, initialize and emit to parent
-  useEffect(() => {
-    if (!onChange) return;
-    const isEmpty = !value || (typeof value === "object" && Object.keys(value).length === 0);
-    if (isEmpty) {
-      const initialized = initializeFormData(fields);
-      const withDerived = applyAllModifiersOnce(fields, initialized);
-      onChange(withDerived);
-    }
-  }, [fields]);
-
-  function handleChange(eOrValue, fieldName) {
-    if (!onChange) return;
-
-    let name, newValue, type, checked, files;
-    if (eOrValue?.target) {
-      const e = eOrValue;
-      name = e.target.name;
-      newValue = e.target.value;
-      type = e.target.type;
-      checked = e.target.checked;
-      files = e.target.files;
-    } else {
-      name = fieldName;
-      newValue = eOrValue;
-    }
-
-    if (type === "checkbox") newValue = checked;
-    if (type === "file") newValue = files?.[0] ?? newValue;
-
-    const baseData = value || {};
-    let nextData = { ...baseData, [name]: newValue };
-
-    // Apply modifiers for the changed field
-    nextData = applyModifiersForField({
-      fields,
-      data: nextData,
-      changedName: name,
-      changedValue: newValue,
-    });
-
-    onChange(nextData);
-  }
-
-  const data = value || {};
-
+  const attrOverrides = buildAttributeOverrides(fields, rules, formData);
   return (
     <div className="w-full">
       <div className="-mx-2 flex flex-wrap">
-        {fields
-          .filter((field) => !isHidden(field, data))
-          .map((field, index) => (
+        {fields.map((field, index) => {
+          const hidden = isHidden(field, formData) || attrOverrides[field.name]?.hidden === true;
+          const readOnly = field.readOnly || isReadOnly(field, formData) || attrOverrides[field.name]?.readOnly === true;
+          const title = (attrOverrides[field.name]?.title ?? (field.label || field.title || field.name));
+          return (
             <div
               key={field.name || index}
-              className={`${getWidthClass(field.width || 100, isMobileView)} mb-4 px-2`}
+              className={`${getWidthClass(field.width || 100, isMobileView)} mb-4 px-2 ${hidden ? "hidden" : ""}`}
             >
               <ReturnFieldsV2
-                onChange={handleChange}
-                value={data[field.name] ?? field.default ?? ""}
+                onChange={onChange}
+                value={(formData[field.name] ?? (field.default ?? ""))}
                 field={{
                   ...field,
-                  title: field.label || field.title || field.name,
-                  disabled: isDisabled(field, data),
+                  title,
+                  readOnly,
                 }}
                 theme={theme}
               />
             </div>
-          ))}
+          );
+        })}
       </div>
     </div>
   );
