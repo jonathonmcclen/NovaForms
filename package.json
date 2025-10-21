@@ -1,9 +1,9 @@
 {
-  "name": "nova-forms",
+  "name": "@jonathonscott/novaforms",
   "version": "0.1.0",
   "description": "Dynamic React forms with JSON schema, modifiers, and subforms",
-  "main": "dist/nova-forms.cjs.js",
-  "module": "dist/nova-forms.es.js",
+  "main": "dist/ctrlform.cjs.js",
+  "module": "dist/ctrlform.es.js",
   "files": [
     "dist"
   ],
