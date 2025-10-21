@@ -1,24 +1,26 @@
-# 🪶 Nova Forms
+# 🎛️ CtrlForm
 
 **Dynamic React forms powered by JSON schemas, modifiers, and subforms.**  
 Create complex, adaptive form systems without boilerplate — designed for scale, simplicity, and composability.
 
-[![npm version](https://img.shields.io/npm/v/nova-forms.svg)](https://www.npmjs.com/package/nova-forms)
+[![npm version](https://img.shields.io/npm/v/@jonathonscott/novaforms.svg)](https://www.npmjs.com/package/@jonathonscott/novaforms)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Build](https://github.com/jonathonmcclendon/NovaForms/actions/workflows/build.yml/badge.svg)](https://github.com/jonathonmcclendon/NovaForms/actions)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/jonathonmcclendon/NovaForms/issues)
+
+### 📚 [**View Live Documentation**](https://nova-forms-next.vercel.app/) 📚
 
 ---
 
 ## ⚙️ Installation
 
 ```bash
-npm install nova-forms
+npm install @jonathonscott/novaforms
 # or
-yarn add nova-forms
+yarn add @jonathonscott/novaforms
 ```
 
-Nova Forms requires **React 18+** and **React DOM 18+** as peer dependencies.
+CtrlForm requires **React 18+** and **React DOM 18+** as peer dependencies.
 
 ---
 
@@ -28,7 +30,7 @@ The simplest way to get started:
 
 ```jsx
 import { useState } from "react";
-import { NovaForm, createFormHandler } from "nova-forms";
+import { Form, createFormHandler } from "@jonathonscott/novaforms";
 
 const fields = [
   { name: "firstName", title: "First Name", type: "string", width: 50 },
@@ -46,7 +48,7 @@ export default function App() {
   });
 
   return (
-    <NovaForm
+    <Form
       fields={fields}
       onChange={handleChange}
       formData={formData}
@@ -115,7 +117,7 @@ Nova Forms comes with 20+ field types ready to use:
 You can extend Nova Forms with your own field types:
 
 ```jsx
-import { registerField } from "nova-forms";
+import { registerField } from "@jonathonscott/novaforms";
 
 function QRCodeScannerField({ field, value, onChange }) {
   return (
@@ -146,7 +148,7 @@ const fields = [
 
 ## 🧠 API Overview
 
-### `NovaForm`
+### `Form`
 
 Renders a form based on your field array with integrated modifiers and conditions.
 
@@ -276,12 +278,12 @@ Trigger shape on a field:
 }
 ```
 
-Pass `rules` to both `createFormHandler` and `NovaForm`:
+Pass `rules` to both `createFormHandler` and `Form`:
 
 ```jsx
 const handleChange = createFormHandler({ fields, rules, setState: setFormData });
 
-<NovaForm fields={fields} rules={rules} onChange={handleChange} formData={formData} />
+<Form fields={fields} rules={rules} onChange={handleChange} formData={formData} />
 ```
 
 Hidden fields remain mounted and use Tailwind's `hidden` class so values still update.
@@ -310,7 +312,7 @@ If you're currently mapping fields manually:
 
 **Before:**
 ```jsx
-import { ReturnFieldsV2, createFormHandler, initializeFormData } from "nova-forms";
+import { ReturnFieldsV2, createFormHandler, initializeFormData } from "@jonathonscott/novaforms";
 
 const [formData, setFormData] = useState(() => initializeFormData(fields));
 const handleChange = createFormHandler({ fields, setState: setFormData });
@@ -332,13 +334,13 @@ return (
 
 **After:**
 ```jsx
-import { NovaForm, createFormHandler } from "nova-forms";
+import { Form, createFormHandler } from "@jonathonscott/novaforms";
 
 const [formData, setFormData] = useState({});
 const handleChange = createFormHandler({ fields, setState: setFormData });
 
 return (
-  <NovaForm
+  <Form
     fields={fields}
     onChange={handleChange}
     formData={formData}
@@ -351,6 +353,9 @@ return (
 ## 📚 Documentation
 
 For comprehensive guides and examples, see our documentation:
+
+- **Live Documentation**: [nova-forms-next.vercel.app](https://nova-forms-next.vercel.app/)
+- **Docs Repository**: [jonathonmcclen/NovaForms-Next](https://github.com/jonathonmcclen/NovaForms-Next)
 
 - **[Introduction](documentation/intro.md)** - Complete overview of Nova Forms
 - **[Quick Start](documentation/quickstart.md)** - Get up and running quickly
@@ -428,8 +433,7 @@ If Nova Forms helps you ship faster or cleaner React code:
 
 - [ ] Advanced validation layer (Yup / Zod integration)
 - [ ] Enhanced theming system (context-aware)
-- [ ] Field group templates (grid layouts)
-- [ ] Better documentation with examples gallery
+- [ ] Multi-Step Forms / Wizard support
 - [ ] TypeScript definitions (optional)
 
 ---

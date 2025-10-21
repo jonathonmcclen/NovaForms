@@ -73,7 +73,7 @@ function buildAttributeOverrides(fields, rules, formData) {
   return overrides;
 }
 
-export function NovaForm({
+export function Form({
   fields = [],
   onChange,
   theme,

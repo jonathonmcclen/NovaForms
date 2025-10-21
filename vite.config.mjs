@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.js"),
       name: "NovaForms",
-      fileName: (format) => `nova-forms.${format}.js`,
+      fileName: (format) => `ctrlform.${format}.js`,
       formats: ["es", "umd", "cjs"], // <- add cjs for backward compatibility
     },
     rollupOptions: {
