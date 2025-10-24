@@ -399,5 +399,20 @@ declare module "@jonathonscott/novaforms" {
 
   function InputToggle(props: InputToggleProps): JSX.Element;
 
+  // MARK: MediaSelectorModal
+
+  interface MediaSelectorModalProps {
+    onSelect: (url: string) => void;
+    
+    value: any;
+
+    /**
+     * Default: `Select Media`
+     */
+    label?: string;
+  }
+
+  function MediaSelectorModal(props: MediaSelectorModalProps): JSX.Element;
+
   // #endregion
 }
