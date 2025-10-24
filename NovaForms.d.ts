@@ -382,5 +382,22 @@ declare module "@jonathonscott/novaforms" {
 
   function InputTextArea(props: InputTextAreaProps): JSX.Element;
 
+  // MARK: InputToggle
+
+  interface InputToggleField {
+    name: string;
+    title?: string;
+    description?: string;
+    error?: string;
+  }
+
+  interface InputToggleProps {
+    field: InputToggleField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  function InputToggle(props: InputToggleProps): JSX.Element;
+
   // #endregion
 }
