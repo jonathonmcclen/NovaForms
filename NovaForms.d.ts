@@ -323,5 +323,34 @@ declare module "@jonathonscott/novaforms" {
 
   function InputDefault(props: InputDefaultProps): JSX.Element;
 
+  // MARK: InputNumber
+
+  interface InputNumberField {
+    name: string;
+    label?: string;
+
+    /**
+     * Default: `Enter a number`
+     */
+    placeholder?: string;
+
+    description?: string;
+    optional?: boolean;
+    error?: string;
+
+    // TODO: Are strings okay here? The technical input is `string | number`. -Josh
+    min: number;
+    max: number;
+    step: number;
+  }
+
+  interface InputNumberProps {
+    field: InputNumberField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  function InputNumber(props: InputNumberProps): JSX.Element;
+
   // #endregion
 }

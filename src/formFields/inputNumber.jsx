@@ -42,7 +42,7 @@ export default function InputNumber({ field, value, onChange }) {
           id={name}
           name={name}
           type="number"
-          value={value || 0}
+          value={value || 0} /* FIXME: Should be min-at-range? - Josh */
           placeholder={placeholder}
           onChange={onChange}
           min={min}
