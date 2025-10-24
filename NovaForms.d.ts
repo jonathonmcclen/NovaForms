@@ -7,7 +7,7 @@ type CSSBackgroundColor = CSSProperties["backgroundColor"];
 /**
  * NOTE: Might use `React.ChangeEventHandler` as alias so this is here for now. -Josh
  */
-type onChange = () => void;
+type OnChangeCallback = () => void;
 
 declare module "@jonathonscott/novaforms" {
   // #region - Types
@@ -42,6 +42,17 @@ declare module "@jonathonscott/novaforms" {
   // #endregion
 
   // #region - Structs
+
+  interface NovaFormsTheme {
+    error: CSSColor;
+    inputFocusBorder: CSSBorderColor;
+    inputBorder: CSSBorderColor;
+    label: CSSColor;
+    description: CSSColor;
+    requiredAsterisk: CSSColor;
+    inputText: CSSColor;
+    inputBackground: CSSBackgroundColor;
+  }
 
   interface FormField {
     name: string;
@@ -123,7 +134,7 @@ declare module "@jonathonscott/novaforms" {
 
   interface SocialMediaLinksProps {
     value?: { [id: string]: string };
-    onChange?: onChange;
+    onChange?: OnChangeCallback;
   }
 
   function SocialMediaLinks(props: SocialMediaLinksProps): JSX.Element;
@@ -136,16 +147,10 @@ declare module "@jonathonscott/novaforms" {
     required: boolean;
   }
 
-  interface CaptchaFieldTheme {
-    error: CSSColor;
-    label: string;
-    requiredAsterisk: boolean;
-  }
-
   interface CaptchaFieldProps {
-    onChange?: onChange;
+    onChange?: OnChangeCallback;
     field: CaptchaFieldObject;
-    theme: CaptchaFieldTheme;
+    theme: NovaFormsTheme;
     value: any;
   }
 
@@ -163,22 +168,11 @@ declare module "@jonathonscott/novaforms" {
     optional?: boolean;
   }
 
-  interface DateTimeTheme {
-    error: CSSColor;
-    inputFocusBorder: CSSBorderColor;
-    inputBorder: CSSBorderColor;
-    label: string;
-    description: string;
-    requiredAsterisk: boolean;
-    inputText: string;
-    inputBackground: CSSBackgroundColor;
-  }
-
   interface DateTimeProps {
     field: DateTimeField;
-    theme: DateTimeTheme;
+    theme: NovaFormsTheme;
     value: string;
-    onChange?: onChange;
+    onChange?: OnChangeCallback;
   }
 
   // MARK: DynamicSubForm
@@ -195,6 +189,21 @@ declare module "@jonathonscott/novaforms" {
     title?: string,
     value?: any[]
   ): JSX.Element;
+
+  // MARK: Email
+
+  interface EmailProps {
+    field: EmailField;
+    value: string;
+    theme: NovaFormsTheme;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    required?: boolean;
+    helper?: string;
+    description?: string;
+    placeholder?: string;
+  }
+
+  function Email(props: EmailProps): JSX.Element;
 
   // #endregion
 }
