@@ -1,5 +1,13 @@
 import { CSSProperties } from "react";
+
 type CSSColor = CSSProperties["color"];
+type CSSBorderColor = CSSProperties["borderColor"];
+type CSSBackgroundColor = CSSProperties["backgroundColor"];
+
+/**
+ * NOTE: Might use `React.ChangeEventHandler` as alias so this is here for now. -Josh
+ */
+type onChange = () => void;
 
 declare module "@jonathonscott/novaforms" {
   // #region - Types
@@ -115,7 +123,7 @@ declare module "@jonathonscott/novaforms" {
 
   interface SocialMediaLinksProps {
     value?: { [id: string]: string };
-    onChange?: () => void;
+    onChange?: onChange;
   }
 
   function SocialMediaLinks(props: SocialMediaLinksProps): JSX.Element;
@@ -135,13 +143,43 @@ declare module "@jonathonscott/novaforms" {
   }
 
   interface CaptchaFieldProps {
-    onChange: () => void;
+    onChange?: onChange;
     field: CaptchaFieldObject;
     theme: CaptchaFieldTheme;
     value: any;
   }
 
   function CaptchaField(props: CaptchaFieldProps): JSX.Element;
+
+  // MARK: DateTime
+
+  interface DateTimeField {
+    name: string;
+    error?: CSSColor;
+    title?: string;
+    helper?: string;
+    description?: string;
+    required?: boolean;
+    optional?: boolean;
+  }
+
+  interface DateTimeTheme {
+    error: CSSColor;
+    inputFocusBorder: CSSBorderColor;
+    inputBorder: CSSBorderColor;
+    label: string;
+    description: string;
+    requiredAsterisk: boolean;
+    inputText: string;
+    inputBackground: CSSBackgroundColor;
+  }
+
+  interface DateTimeProps {
+    field: DateTimeField;
+    theme: DateTimeTheme;
+    value: string;
+    onChange?: onChange;
+  }
 
   // #endregion
 }
