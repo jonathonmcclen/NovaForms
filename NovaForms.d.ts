@@ -205,5 +205,34 @@ declare module "@jonathonscott/novaforms" {
 
   function Email(props: EmailProps): JSX.Element;
 
+  // MARK: FormHeader
+
+  type FormHeaderSize = "sm" | "md" | "lg";
+
+  interface FormHeaderField {
+    title: string;
+
+    /**
+     * Default: `md`
+     */
+    size?: FormHeaderSize;
+
+    /**
+     * Default: `false`
+     */
+    dividerAbove?: boolean;
+
+    /**
+     * Default: `false`
+     */
+    dividerBelow?: boolean;
+  }
+
+  interface FormHeaderProps {
+    field: FormHeaderField;
+  }
+
+  function FormHeader(props: FormHeaderProps): JSX.Element;
+
   // #endregion
 }
