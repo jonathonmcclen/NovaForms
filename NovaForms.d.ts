@@ -270,5 +270,25 @@ declare module "@jonathonscott/novaforms" {
 
   function InputColor(props: InputColorProps): JSX.Element;
 
+  // MARK: InputDate
+
+  interface InputDateField {
+    name: string;
+    title?: string;
+    description?: string;
+    optional?: boolean;
+    required?: boolean;
+    error?: string;
+  }
+
+  interface InputDateProps {
+    field: InputDateField;
+    value: any;
+    theme: NovaFormsTheme;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  function InputDate(props: InputDateProps): JSX.Element;
+
   // #endregion
 }
