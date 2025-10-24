@@ -11,6 +11,7 @@ export default function InputTextArea({ field, value, onChange, theme }) {
     description,
     optional,
     error,
+    // TODO: Maybe range sanity-check this to force human-readable error over silent runtime errors with invalid rows? -Josh
     rows = 4, // default rows
   } = field
 

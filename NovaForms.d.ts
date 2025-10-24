@@ -352,5 +352,35 @@ declare module "@jonathonscott/novaforms" {
 
   function InputNumber(props: InputNumberProps): JSX.Element;
 
+  // MARK: InputTextArea
+
+  interface InputTextAreaField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `4`
+     */
+    rows: number;
+
+    /**
+     * Default: `Enter text`
+     */
+    placeholder?: string;
+
+    description?: string;
+    optional?: boolean;
+    error?: string;
+  }
+
+  interface InputTextAreaProps {
+    field: InputTextAreaField;
+    value: any;
+    theme: NovaFormsTheme;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  function InputTextArea(props: InputTextAreaProps): JSX.Element;
+
   // #endregion
 }
