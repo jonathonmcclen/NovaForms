@@ -252,5 +252,23 @@ declare module "@jonathonscott/novaforms" {
 
   function InputCheckbox(props: InputCheckboxProps): JSX.Element;
 
+  // MARK: InputColor
+
+  interface InputColorField {
+    name: string;
+    title?: string;
+    description?: string;
+    optional?: boolean;
+    error?: string;
+  }
+
+  interface InputColorProps {
+    field: InputColorField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  function InputColor(props: InputColorProps): JSX.Element;
+
   // #endregion
 }
