@@ -181,5 +181,20 @@ declare module "@jonathonscott/novaforms" {
     onChange?: onChange;
   }
 
+  // MARK: DynamicSubForm
+
+  interface DynamicSubFormField {
+    name: string;
+    type: string;
+    title: string;
+  }
+
+  function DynamicSubForm(
+    fields: DynamicSubFormField[],
+    onSave?: (values: any[]) => void,
+    title?: string,
+    value?: any[]
+  ): JSX.Element;
+
   // #endregion
 }
