@@ -290,5 +290,38 @@ declare module "@jonathonscott/novaforms" {
 
   function InputDate(props: InputDateProps): JSX.Element;
 
+  // MARK: InputDefault
+
+  interface InputDefaultField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `text`
+     */
+    type?: string;
+
+    /**
+     * Default: `Enter text`
+     */
+    placeholder?: string;
+
+    description?: string;
+    required?: boolean;
+    error?: string;
+    helper?: string;
+    leadingIcon?: boolean;
+    trailingIcon?: boolean;
+  }
+
+  interface InputDefaultProps {
+    field: InputDefaultField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    theme: NovaFormsTheme;
+  }
+
+  function InputDefault(props: InputDefaultProps): JSX.Element;
+
   // #endregion
 }
