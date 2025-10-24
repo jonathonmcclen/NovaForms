@@ -234,5 +234,23 @@ declare module "@jonathonscott/novaforms" {
 
   function FormHeader(props: FormHeaderProps): JSX.Element;
 
+  // MARK: InputCheckbox
+
+  interface InputCheckboxField {
+    name: string;
+    label?: string;
+    optional?: boolean;
+    description?: string;
+    error?: string;
+  }
+
+  interface InputCheckboxProps {
+    field: InputCheckboxField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  function InputCheckbox(props: InputCheckboxProps): JSX.Element;
+
   // #endregion
 }
