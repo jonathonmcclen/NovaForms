@@ -403,7 +403,7 @@ declare module "@jonathonscott/novaforms" {
 
   interface MediaSelectorModalProps {
     onSelect: (url: string) => void;
-    
+
     value: any;
 
     /**
@@ -413,6 +413,59 @@ declare module "@jonathonscott/novaforms" {
   }
 
   function MediaSelectorModal(props: MediaSelectorModalProps): JSX.Element;
+
+  // MARK: MultiSelect
+
+  interface MultiSelectOption {
+    label: string;
+
+    /**
+     * For the dynamic `optionLabel` passed via `MultiSelectField` prop.
+     */
+    [optionLabel: string]: string;
+  }
+
+  type MultiSelectOptions = MultiSelectOption[];
+
+  interface MultiSelectField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `"Select options"`
+     */
+    placeholder?: string;
+
+    /**
+     * Default: `[]`
+     */
+    options?: MultiSelectOptions;
+
+    /**
+     * Default: `id`
+     */
+    optionId?: string;
+
+    /**
+     * Default: `name`
+     */
+    optionLabel?: string;
+
+    error?: string;
+  }
+
+  interface MultiSelectProps {
+    field: MultiSelectField;
+    theme: NovaFormsTheme;
+    onChange: (labels: any[]) => void;
+
+    /**
+     * Default: `[]`
+     */
+    value?: any[];
+  }
+
+  function MultiSelect(props: MultiSelectProps): JSX.Element;
 
   // #endregion
 }
