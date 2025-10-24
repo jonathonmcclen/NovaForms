@@ -1,5 +1,8 @@
+import { CSSProperties } from "react";
+type CSSColor = CSSProperties["color"];
+
 declare module "@jonathonscott/novaforms" {
-  // #region Types
+  // #region - Types
 
   type FormFieldCondition =
     | "true"
@@ -17,7 +20,20 @@ declare module "@jonathonscott/novaforms" {
 
   // #endregion
 
-  // #region Structs
+  // #region - Enums
+
+  type SocialMediaOptions =
+    | "Facebook"
+    | "Instagram"
+    | "Twitter"
+    | "LinkedIn"
+    | "YouTube"
+    | "TikTok"
+    | "GitHub";
+
+  // #endregion
+
+  // #region - Structs
 
   interface FormField {
     name: string;
@@ -64,7 +80,7 @@ declare module "@jonathonscott/novaforms" {
   }
 
   // #endregion
-  // #region Global
+  // #region - Global
 
   /**
    * Generic onChange handler for dynamic forms Applies modifiers automatically.
@@ -90,6 +106,42 @@ declare module "@jonathonscott/novaforms" {
     when: FormFieldCondition,
     value: Array | RegExp | string | number
   ): boolean;
+
+  // #endregion
+
+  // #region - React
+
+  // MARK: SocialMediaLinks
+
+  interface SocialMediaLinksProps {
+    value?: { [id: string]: string };
+    onChange?: () => void;
+  }
+
+  function SocialMediaLinks(props: SocialMediaLinksProps): JSX.Element;
+
+  // MARK: CaptchaField
+
+  interface CaptchaFieldObject {
+    name: string;
+    title: string;
+    required: boolean;
+  }
+
+  interface CaptchaFieldTheme {
+    error: CSSColor;
+    label: string;
+    requiredAsterisk: boolean;
+  }
+
+  interface CaptchaFieldProps {
+    onChange: () => void;
+    field: CaptchaFieldObject;
+    theme: CaptchaFieldTheme;
+    value: any;
+  }
+
+  function CaptchaField(props: CaptchaFieldProps): JSX.Element;
 
   // #endregion
 }
