@@ -10,6 +10,15 @@ import {
 } from '@headlessui/react'
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
 
+/**
+ * @typedef {import('index').NovaForms.SingleSelectProps} SingleSelectProps
+ */
+
+/**
+ * @param {SingleSelectProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function SingleSelect({ field, value, onChange, theme }) {
   const {
     name,

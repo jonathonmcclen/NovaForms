@@ -444,6 +444,7 @@ declare module NovaForms {
 
   // MARK: MultiSelect
 
+  // TODO: Verify & Validate optional and required field(s). -Josh
   interface MultiSelectOption {
     label: string;
 
@@ -637,6 +638,64 @@ declare module NovaForms {
   }
 
   function SignatureInput(props: SignatureInputProps): JSX.Element;
+
+  // MARK: SingleSelect
+
+  // TODO: Verify & Validate optional and required field(s). -Josh
+  interface SingleSelectOption {
+    name: string;
+    value: any;
+    label: string;
+
+    /**
+     * For the dynamic `optionLabel` passed via `SingleSelectField` prop.
+     */
+    [optionLabel: string]: string;
+  }
+
+  interface SingleSelectField {
+    name: string;
+    title?: string;
+    helper?: string;
+    description?: string;
+
+    /**
+     * Default: `Select an option`
+     */
+    placeholder?: string;
+
+    required?: boolean;
+    error?: string;
+
+    /**
+     * Default: `[]`
+     */
+    options?: (SingleSelectOption | string)[];
+
+    /**
+     * Default: `id`
+     */
+    optionId?: string;
+
+    /**
+     * Default: `name`
+     */
+    optionLabel?: string;
+  }
+
+  interface SingleSelectProps {
+    field: SingleSelectField;
+    value: any;
+
+    /**
+     * TODO: Not sure if the type is broad or constrained to strings or casted strings. -Josh
+     */
+    onChange: (value: any) => void;
+
+    theme: NovaFormsTheme;
+  }
+
+  function SingleSelect(props: SingleSelectProps): JSX.Element;
 
   // #endregion
 }
