@@ -1,8 +1,17 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
+import { useState } from "react";
+import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
 
+/**
+ * @typedef {import('index').NovaForms.ScaleInputProps} ScaleInputProps
+ */
+
+/**
+ * @param {ScaleInputProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function ScaleInput({ field, value, onChange, theme }) {
   const {
     name,
@@ -13,23 +22,23 @@ export default function ScaleInput({ field, value, onChange, theme }) {
     min = 1,
     max = 10,
     step = 1, // just in case you want 1–5 or 2–20 etc.
-  } = field
+  } = field;
 
-  const [error, setError] = useState(null)
-  const hasError = Boolean(error)
+  const [error, setError] = useState(null);
+  const hasError = Boolean(error);
 
   const handleChange = (val) => {
     if (required && !val) {
-      setError('Selection is required')
+      setError("Selection is required");
     } else {
-      setError(null)
+      setError(null);
     }
-    onChange({ target: { name, value: val } })
-  }
+    onChange({ target: { name, value: val } });
+  };
 
-  const numbers = []
+  const numbers = [];
   for (let i = min; i <= max; i += step) {
-    numbers.push(i)
+    numbers.push(i);
   }
 
   return (
@@ -66,7 +75,7 @@ export default function ScaleInput({ field, value, onChange, theme }) {
         id={name}
         role="radiogroup"
         className="flex flex-wrap gap-2"
-        aria-invalid={hasError ? 'true' : 'false'}
+        aria-invalid={hasError ? "true" : "false"}
         aria-describedby={
           hasError
             ? `${name}-error`
@@ -96,7 +105,7 @@ export default function ScaleInput({ field, value, onChange, theme }) {
                 backgroundColor:
                   String(value) === String(num)
                     ? theme.inputBackground
-                    : 'transparent',
+                    : "transparent",
                 color:
                   String(value) === String(num)
                     ? theme.inputText
@@ -134,5 +143,5 @@ export default function ScaleInput({ field, value, onChange, theme }) {
         </p>
       ) : null}
     </div>
-  )
+  );
 }

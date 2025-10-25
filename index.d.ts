@@ -585,5 +585,38 @@ declare module NovaForms {
 
   function RatingInput(props: RatingInputProps): JSX.Element;
 
+  // MARK: ScaleInput
+
+  interface ScaleInputField {
+    name: string;
+    title?: string;
+    description?: string;
+    required?: boolean;
+    helper?: string;
+
+    /**
+     * Default: `1`
+     */
+    min?: number;
+
+    /**
+     * Default: `10`
+     */
+    max?: number;
+
+    /**
+     * Default: `1`
+     */
+    step?: number;
+  }
+
+  interface ScaleInputProps {
+    field: ScaleInputField;
+    value: any;
+    onChange: (arg: { name: string; value: number }) => void;
+  }
+
+  function ScaleInput(props: ScaleInputProps): JSX.Element;
+
   // #endregion
 }
