@@ -130,6 +130,8 @@ declare module "@jonathonscott/novaforms" {
 
   // #region - React
 
+  function AutoComplete(): JSX.Element;
+
   // MARK: SocialMediaLinks
 
   interface SocialMediaLinksProps {
@@ -466,6 +468,33 @@ declare module "@jonathonscott/novaforms" {
   }
 
   function MultiSelect(props: MultiSelectProps): JSX.Element;
+
+  // MARK: Phone
+
+  interface PhoneField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `(123) 456-7890`
+     */
+    placeholder?: string;
+
+    description?: string;
+    required?: boolean;
+    helper?: string;
+    leadingIcon?: boolean;
+    trailingIcon?: boolean;
+  }
+
+  interface PhoneProps {
+    field: PhoneField;
+    value: number | string;
+    onChange: (arg: { name: string; value: string }) => void;
+    theme: NovaFormsTheme;
+  }
+
+  function Phone(props: PhoneProps): JSX.Element;
 
   // #endregion
 }
