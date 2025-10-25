@@ -5,32 +5,6 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
 /** @import { Dispatch, SetStateAction } from 'react' */
 
-// #region Types
-
-/**
- * @typedef PhoneRecord
- *
- * @property {string} name
- * @property {string} title
- * @property {string} [placeholder = "(123) 456-7890"] (Optional)
- * @property {string} description
- * @property {boolean} required
- * @property {string} helper
- * @property {any} leadingIcon FIXME: Not sure if string, boolean, or component.
- * @property {any} trailingIcon FIXME: Not sure if string, boolean, or component.
- */
-
-/**
- * @typedef PhoneInputArguments
- *
- * @property {PhoneRecord} field
- * @property {string} value
- * @property {(target: {name: string, value: string}) => void} onChange
- * @property {any} theme TODO: Write the typedef for themes.
- */
-
-// #endregion
-
 // #region Constants
 
 /**
@@ -52,7 +26,11 @@ const REGEX_DIGIT = /\D/g
 // #region Components
 
 /**
- * @param {PhoneInputArguments} args
+ * @typedef {import('index').NovaForms.PhoneProps} PhoneProps
+ */
+
+/**
+ * @param {PhoneProps} props
  *
  * @returns {JSX.Element}
  */

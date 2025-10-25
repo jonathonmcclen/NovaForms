@@ -1,31 +1,11 @@
 'use client'
 
-// #region Types
-
 /**
- * @typedef InputColorInput
- *
- * @property {string} name
- * @property {string} title
- * @property {string} description
- * @property {boolean} optional
- * @property {string} error
- **/
-
-/**
- * @typedef InputColorArguments
- *
- * @property {InputColorInput} field
- * @property {string} value
- * @property {(value: string) => void} onChange
+ * @typedef {import('index').NovaForms.InputColorProps} InputColorProps
  */
 
-// #endregion
-
-// #region Components
-
 /**
- * @param {InputColorArguments} args
+ * @param {InputColorProps} props
  *
  * @returns {JSX.Element}
  */
@@ -98,5 +78,3 @@ export default function InputColor({ field, value, onChange }) {
     </div>
   )
 }
-
-// #endregion

@@ -11,12 +11,20 @@ import {
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid'
 
 /**
+ * @typedef {import('index').NovaForms.MultiSelectProps} MultiSelectProps
+ */
+
+/**
  * MultiSelect (labels mode)
  *
  * - Accepts options as primitives (string/number) or objects.
  * - Internally normalizes every option to { id, label, original }.
  * - `value` is always an array of labels.
  * - `onChange` always emits an array of labels.
+ * 
+ * @param {MultiSelectProps} props
+ * 
+ * @returns {JSX.Element}
  */
 export default function MultiSelect({ field, value = [], onChange, theme }) {
   const {

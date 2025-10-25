@@ -9,7 +9,7 @@ type CSSBackgroundColor = CSSProperties["backgroundColor"];
  */
 type OnChangeCallback = () => void;
 
-declare module "@jonathonscott/novaforms" {
+declare module NovaForms {
   // #region - Types
 
   type FormFieldCondition =
@@ -38,6 +38,8 @@ declare module "@jonathonscott/novaforms" {
     | "YouTube"
     | "TikTok"
     | "GitHub";
+
+  type SocialMediaDictionary = {[id: SocialMediaOptions]: string};
 
   // #endregion
 
@@ -135,7 +137,7 @@ declare module "@jonathonscott/novaforms" {
   // MARK: SocialMediaLinks
 
   interface SocialMediaLinksProps {
-    value?: { [id: string]: string };
+    value?: SocialMediaDictionary;
     onChange?: OnChangeCallback;
   }
 
@@ -162,7 +164,7 @@ declare module "@jonathonscott/novaforms" {
 
   interface DateTimeField {
     name: string;
-    error?: CSSColor;
+    error?: string;
     title?: string;
     helper?: string;
     description?: string;
@@ -185,17 +187,40 @@ declare module "@jonathonscott/novaforms" {
     title: string;
   }
 
-  function DynamicSubForm(
-    fields: DynamicSubFormField[],
-    onSave?: (values: any[]) => void,
-    title?: string,
-    value?: any[]
-  ): JSX.Element;
+  interface DynamicSubFormProps {
+    fields: DynamicSubFormField[];
+    onSave?: (values: any[]) => void;
 
-  // MARK: Email
+    /**
+     * Default: `Item`
+     */
+    title?: string;
 
-  interface EmailProps {
-    field: EmailField;
+    value?: any[];
+  }
+
+  function DynamicSubForm(props: DynamicSubFormProps): JSX.Element;
+
+  // MARK: EmailInput
+
+  interface EmailInputField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `you@example.com`
+     */
+    placeholder?: string;
+
+    description?: string;
+    required?: boolean;
+    helper?: string;
+    leadingIcon?: boolean;
+    trailingIcon?: boolean;
+  }
+
+  interface EmailInputProps {
+    field: EmailInputField;
     value: string;
     theme: NovaFormsTheme;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -205,7 +230,7 @@ declare module "@jonathonscott/novaforms" {
     placeholder?: string;
   }
 
-  function Email(props: EmailProps): JSX.Element;
+  function EmailInput(props: EmailInputProps): JSX.Element;
 
   // MARK: FormHeader
 
@@ -396,7 +421,7 @@ declare module "@jonathonscott/novaforms" {
   interface InputToggleProps {
     field: InputToggleField;
     value: any;
-    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onChange: React.ChangeEventHandler<HTMLInputElement>;
   }
 
   function InputToggle(props: InputToggleProps): JSX.Element;
@@ -495,6 +520,36 @@ declare module "@jonathonscott/novaforms" {
   }
 
   function Phone(props: PhoneProps): JSX.Element;
+
+  // #MARK: RadioGroup
+
+  interface RadioGroupOption {
+    label: string;
+    value: React.Key;
+  }
+
+  interface RadioGroupField {
+    name: string;
+    title?: string;
+    description?: string;
+    required?: boolean;
+    error?: string;
+    helper?: string;
+
+    /**
+     * Default: `[]`
+     */
+    options?: any[];
+  }
+
+  interface RadioGroupProps {
+    field: RadioGroupField;
+    value: any;
+    onChange: (value: string) => void;
+    theme: NovaFormsTheme;
+  }
+
+  function RadioGroup(props: RadioGroupProps): JSX.Element;
 
   // #endregion
 }

@@ -3,6 +3,15 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/**
+ * @typedef {import('index').NovaForms.InputDateProps} InputDateProps
+ */
+
+/**
+ * @param {InputDateProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputDate({ field, value, onChange, theme }) {
   const { name, title, description, optional, required, error } = field
 

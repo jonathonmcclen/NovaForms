@@ -3,6 +3,15 @@
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 import { useState } from 'react'
 
+/**
+ * @typedef {import('index').NovaForms.InputTextAreaProps} InputTextAreaProps
+ */
+
+/**
+ * @param {InputTextAreaProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputTextArea({ field, value, onChange, theme }) {
   const {
     name,

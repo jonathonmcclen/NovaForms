@@ -1,5 +1,14 @@
 'use client'
 
+/**
+ * @typedef {import('index').NovaForms.InputToggleProps} InputToggleProps
+ */
+
+/**
+ * @param {InputToggleProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputToggle({ field, value, onChange }) {
   const { name, title, description, error } = field
   const hasError = Boolean(error)

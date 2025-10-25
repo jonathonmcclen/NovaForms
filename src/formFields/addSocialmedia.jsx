@@ -5,10 +5,9 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid'
 
 /** @import { Dispatch, SetStateAction } from 'react' */
 
-// #region Types
-
 /**
- * @typedef {'Facebook'|'Instagram'|'Twitter'|'LinkedIn'|'YouTube'|'TikTok'|'GitHub'} SocialMediaOptions
+ * @typedef {import('index').NovaForms.SocialMediaOptions} SocialMediaOptions
+ * @typedef {import('index').NovaForms.SocialMediaLinksProps} SocialMediaLinksProps
  */
 
 /**
@@ -21,8 +20,6 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid'
  * @property {SocialMediaLinksDictionary} [value = {}]
  * @property {() => void} [onChange = null]
  */
-
-// #endregion
 
 // #region Constants
 const SOCIAL_OPTIONS = [
@@ -40,7 +37,7 @@ const SOCIAL_OPTIONS = [
 // #region Components
 
 /**
- * @param {SocialMediaLinksArguments} args
+ * @param {SocialMediaLinksProps} props
  *
  * @returns {JSX.Element}
  */

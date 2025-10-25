@@ -24,6 +24,9 @@ const people = [
   { id: 10, name: 'Emil Schaefer' },
 ]
 
+/**
+ * @returns {JSX.Element}
+ */
 export default function AutoComplete() {
   const [selected, setSelected] = useState(people[0])
   const [query, setQuery] = useState('')

@@ -2,6 +2,15 @@
 
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/**
+ * @typedef {import('index').NovaForms.InputNumberProps} InputNumberProps
+ */
+
+/**
+ * @param {InputNumberProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputNumber({ field, value, onChange }) {
   const {
     name,

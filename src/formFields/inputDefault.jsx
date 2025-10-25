@@ -3,6 +3,15 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/**
+ * @typedef {import('index').NovaForms.InputDefaultProps} InputDefaultProps
+ */
+
+/**
+ * @param {InputDefaultProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputDefault({ field, value, onChange, theme }) {
   const {
     name,

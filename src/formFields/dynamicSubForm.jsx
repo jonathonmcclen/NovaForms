@@ -3,6 +3,15 @@
 import { useEffect, useState } from "react";
 import { ReturnFieldsV2 } from "../returnFields.jsx";
 
+/**
+ * @typedef {import('index').NovaForms.DynamicSubFormProps} DynamicSubFormProps
+ */
+
+/**
+ * @param {DynamicSubFormProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function DynamicSubForm({
   fields,
   onSave,

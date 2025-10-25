@@ -1,5 +1,14 @@
 'use client'
 
+/**
+ * @typedef {import('index').NovaForms.InputCheckboxProps} InputCheckboxProps
+ */
+
+/**
+ * @param {InputCheckboxProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function InputCheckbox({ field, value, onChange }) {
   const { name, label, optional, description, error } = field
   const hasError = Boolean(error)

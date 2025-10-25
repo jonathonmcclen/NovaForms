@@ -1,35 +1,13 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
+import { useState } from "react";
+import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
 
 /** @import { Dispatch, SetStateAction } from 'react' */
 
-// #region Types
-
 /**
- * @typedef EmailInput
- *
- * @property {string} name
- * @property {string} title
- * @property {string} [placeholder] (Optional)
- * @property {string} description
- * @property {boolean} required
- * @property {any} helper TODO: Resolve type.
- * @property {any} leadingIcon FIXME: Not sure if string, boolean, or component.
- * @property {any} trailingIcon FIXME: Not sure if string, boolean, or component.
+ * @typedef {import('index').NovaForms.EmailInputProps} EmailInputProps
  */
-
-/**
- * @typedef EmailInputArguments
- *
- * @property {EmailInput} field
- * @property {string} value
- * @property {() => void} onChange
- * @property {any} theme TODO: Implement theme type.
- */
-
-// #endregion
 
 // #region Constants
 
@@ -38,53 +16,53 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
  *
  * Basic but solid email regex
  */
-const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // #endregion
 
 // #region Components
 
 /**
+ * @param {EmailInputProps} props
  *
- * @param {EmailInputArguments} param0
  * @returns {JSX.Element}
  */
 export default function EmailInput({ field, value, onChange, theme }) {
   const {
     name,
     title,
-    placeholder = 'you@example.com',
+    placeholder = "you@example.com",
     description,
     required,
     helper,
     leadingIcon: LeadingIcon,
     trailingIcon: TrailingIcon,
-  } = field
+  } = field;
 
-  const [isFocused, setIsFocused] = useState(false)
+  const [isFocused, setIsFocused] = useState(false);
 
   /** @type {[string|null, Dispatch<SetStateAction<string|null>>]} */
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
-  const hasError = Boolean(error)
+  const hasError = Boolean(error);
 
   const borderColor = hasError
     ? theme.error
     : isFocused
       ? theme.inputFocusBorder
-      : theme.inputBorder
+      : theme.inputBorder;
 
   const handleBlur = () => {
-    setIsFocused(false)
+    setIsFocused(false);
 
     if (required && !value) {
-      setError('Email is required')
+      setError("Email is required");
     } else if (value && !REGEX_EMAIL.test(value)) {
-      setError('Please enter a valid email address')
+      setError("Please enter a valid email address");
     } else {
-      setError(null)
+      setError(null);
     }
-  }
+  };
 
   return (
     <div>
@@ -122,11 +100,11 @@ export default function EmailInput({ field, value, onChange, theme }) {
           name={name}
           type="email"
           placeholder={placeholder}
-          value={value || ''}
+          value={value || ""}
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={handleBlur}
-          aria-invalid={hasError ? 'true' : 'false'}
+          aria-invalid={hasError ? "true" : "false"}
           aria-describedby={
             hasError
               ? `${name}-error`
@@ -138,12 +116,12 @@ export default function EmailInput({ field, value, onChange, theme }) {
             color: theme.inputText,
             backgroundColor: theme.inputBackground,
             borderColor: borderColor,
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderRadius: '0.375rem',
-            paddingLeft: LeadingIcon ? '2.5rem' : '0.75rem',
-            paddingRight: TrailingIcon || hasError ? '2.5rem' : '0.75rem',
-            outline: 'none',
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderRadius: "0.375rem",
+            paddingLeft: LeadingIcon ? "2.5rem" : "0.75rem",
+            paddingRight: TrailingIcon || hasError ? "2.5rem" : "0.75rem",
+            outline: "none",
           }}
           className="block w-full py-1.5 text-base sm:text-sm/6"
         />
@@ -190,7 +168,7 @@ export default function EmailInput({ field, value, onChange, theme }) {
         </p>
       ) : null}
     </div>
-  )
+  );
 }
 
 // #endregion

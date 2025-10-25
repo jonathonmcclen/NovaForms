@@ -2,8 +2,17 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+/**
+ * @typedef {import('index').NovaForms.CaptchaFieldProps} CaptchaFieldProps
+ */
+
 const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
+/**
+ * @param {CaptchaFieldProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function CaptchaField({ field, value, onChange, theme }) {
   const recaptchaRef = useRef(null)
   const [widgetId, setWidgetId] = useState(null)

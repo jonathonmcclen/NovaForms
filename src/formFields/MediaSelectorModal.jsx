@@ -6,6 +6,15 @@ import MediaSelector from './MediaSelector'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 
+/**
+ * @typedef {import('index').NovaForms.MediaSelectorModalProps} MediaSelectorModalProps
+ */
+
+/**
+ * @param {MediaSelectorModalProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function MediaSelectorModal({
   onSelect,
   value,

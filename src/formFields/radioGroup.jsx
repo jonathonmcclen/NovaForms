@@ -1,8 +1,17 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
+import { useState } from "react";
+import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
 
+/**
+ * @typedef {import('index').NovaForms.RadioGroupProps} RadioGroupProps
+ */
+
+/**
+ * @param {RadioGroupProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function RadioGroup({ field, value, onChange, theme }) {
   const {
     name,
@@ -12,10 +21,10 @@ export default function RadioGroup({ field, value, onChange, theme }) {
     error,
     helper,
     options = [],
-  } = field
+  } = field;
 
-  const [touched, setTouched] = useState(false)
-  const hasError = Boolean(error || (required && touched && !value))
+  const [touched, setTouched] = useState(false);
+  const hasError = Boolean(error || (required && touched && !value));
 
   return (
     <div>
@@ -87,7 +96,7 @@ export default function RadioGroup({ field, value, onChange, theme }) {
             style={{ color: theme.error }}
             className="text-sm"
           >
-            {error || 'This field is required'}
+            {error || "This field is required"}
           </p>
         </div>
       ) : description ? (
@@ -100,5 +109,5 @@ export default function RadioGroup({ field, value, onChange, theme }) {
         </p>
       ) : null}
     </div>
-  )
+  );
 }

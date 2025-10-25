@@ -1,25 +1,9 @@
 'use client'
 
-// #region Types
-
 /**
- * @typedef {'sm'|'md'|'lg'} FormHeaderSize
+ * @typedef {import('index').NovaForms.FormHeaderProps} FormHeaderProps
  */
 
-/**
- * @typedef FormHeaderInput
- *
- * @property {string} title
- * @property {FormHeaderSize} size
- * @property {boolean} [dividerAbove = false]
- * @property {boolean} [dividerBelow = false]
- */
-
-/**
- * @typedef {field: FormHeaderInput} FormHeaderArguments
- */
-
-// #endregion Types
 // #region Constants
 
 /**
@@ -36,7 +20,7 @@ const sizeClasses = {
 // #region Components
 
 /**
- * @param {FormHeaderArguments} param0
+ * @param {FormHeaderProps} props
  *
  * @returns {JSX.Element}
  */
