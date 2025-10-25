@@ -3,6 +3,15 @@
 import { useState } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/**
+ * @typedef {import('index').NovaForms.TimeInputProps} TimeInputProps
+ */
+
+/**
+ * @param {TimeInputProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function TimeInput({ field, value, onChange, theme }) {
   const {
     name,

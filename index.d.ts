@@ -1,4 +1,5 @@
 import { SignatureInputProps } from "@/formFields/Signature";
+import { TimeInputProps } from "@/formFields/Time";
 import { CSSProperties } from "react";
 
 type CSSColor = CSSProperties["color"];
@@ -216,8 +217,8 @@ declare module NovaForms {
     description?: string;
     required?: boolean;
     helper?: string;
-    leadingIcon?: boolean;
-    trailingIcon?: boolean;
+    leadingIcon?: JSX.Element;
+    trailingIcon?: JSX.Element;
   }
 
   interface EmailInputProps {
@@ -338,8 +339,8 @@ declare module NovaForms {
     required?: boolean;
     error?: string;
     helper?: string;
-    leadingIcon?: boolean;
-    trailingIcon?: boolean;
+    leadingIcon?: JSX.Element;
+    trailingIcon?: JSX.Element;
   }
 
   interface InputDefaultProps {
@@ -510,8 +511,8 @@ declare module NovaForms {
     description?: string;
     required?: boolean;
     helper?: string;
-    leadingIcon?: boolean;
-    trailingIcon?: boolean;
+    leadingIcon?: JSX.Element;
+    trailingIcon?: JSX.Element;
   }
 
   interface PhoneProps {
@@ -696,6 +697,37 @@ declare module NovaForms {
   }
 
   function SingleSelect(props: SingleSelectProps): JSX.Element;
+
+  // MARK: TimeInput
+
+  interface TimeInputField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `HH:MM`
+     */
+    placeholder?: string;
+
+    description?: string;
+    required?: boolean;
+    error?: string;
+    helper?: string;
+    leadingIcon?: JSX.Element;
+    trailingIcon?: JSX.Element;
+    min?: string | number;
+    max?: string | number;
+    step?: string | number;
+  }
+
+  interface TimeInputProps {
+    field: TimeInputField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    theme: NovaFormsTheme;
+  }
+
+  function TimeINput(props: TimeInputProps): JSX.Element;
 
   // #endregion
 }
