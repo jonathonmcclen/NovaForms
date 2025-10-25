@@ -1,3 +1,4 @@
+import { SignatureInputProps } from "@/formFields/Signature";
 import { CSSProperties } from "react";
 
 type CSSColor = CSSProperties["color"];
@@ -617,6 +618,25 @@ declare module NovaForms {
   }
 
   function ScaleInput(props: ScaleInputProps): JSX.Element;
+
+  // MARK: SignatureInput
+
+  interface SignatureInputField {
+    name: string;
+    title?: string;
+    description?: string;
+    required?: boolean;
+    helper?: string;
+  }
+
+  interface SignatureInputProps {
+    field: SignatureInputField;
+    value: any;
+    onChange: (arg: { name: string; value: string }) => void;
+    theme: NovaFormsTheme;
+  }
+
+  function SignatureInput(props: SignatureInputProps): JSX.Element;
 
   // #endregion
 }

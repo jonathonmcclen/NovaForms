@@ -4,6 +4,15 @@ import { useRef, useState, useEffect } from 'react'
 import SignaturePad from 'signature_pad'
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
 
+/**
+ * @typedef {import('index').NovaForms.SignatureInputProps} SignatureInputProps
+ */
+
+/**
+ * @param {SignatureInputProps} props
+ *
+ * @returns {JSX.Element}
+ */
 export default function SignatureInput({ field, value, onChange, theme }) {
   const { name, title, description, required, helper } = field
   const canvasRef = useRef(null)
