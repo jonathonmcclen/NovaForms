@@ -8,17 +8,7 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid'
 /**
  * @typedef {import('index').NovaForms.SocialMediaOptions} SocialMediaOptions
  * @typedef {import('index').NovaForms.SocialMediaLinksProps} SocialMediaLinksProps
- */
-
-/**
- * @typedef {{[id: string]: string}} SocialMediaLinksDictionary
- */
-
-/**
- * @typedef SocialMediaLinksArguments
- *
- * @property {SocialMediaLinksDictionary} [value = {}]
- * @property {() => void} [onChange = null]
+ * @typedef {import('index').NovaForms.SocialMediaDictionary} SocialMediaDictionary
  */
 
 // #region Constants
