@@ -749,5 +749,32 @@ declare module NovaForms {
 
   function ImageUploadBase64(props: ImageUploadBase64Props): JSX.Element;
 
+  // MARK: UrlInput
+
+  interface UrlInputField {
+    name: string;
+    title?: string;
+
+    /**
+     * Default: `https://example.com`
+     */
+    placeholder?: string;
+
+    description?: string;
+    required?: boolean;
+    helper?: string;
+    leadingIcon?: JSX.Element;
+    trailingIcon?: JSX.Element;
+  }
+
+  interface UrlInputProps {
+    field: UrlInputField;
+    value: any;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    theme: NovaFormsTheme;
+  }
+
+  function UrlInput(props: UrlInputProps): JSX.Element;
+
   // #endregion
 }

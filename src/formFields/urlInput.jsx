@@ -1,44 +1,45 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ExclamationCircleIcon } from '@heroicons/react/16/solid'
+import { useState } from "react";
+import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
 
+/** @type {import('index').NovaForms.UrlInput} */
 export default function UrlInput({ field, value, onChange, theme }) {
   const {
     name,
     title,
-    placeholder = 'https://example.com',
+    placeholder = "https://example.com",
     description,
     required,
     helper,
     leadingIcon: LeadingIcon,
     trailingIcon: TrailingIcon,
-  } = field
+  } = field;
 
-  const [isFocused, setIsFocused] = useState(false)
-  const [error, setError] = useState(null)
+  const [isFocused, setIsFocused] = useState(false);
+  const [error, setError] = useState(null);
 
-  const hasError = Boolean(error)
+  const hasError = Boolean(error);
 
   const borderColor = hasError
     ? theme.error
     : isFocused
       ? theme.inputFocusBorder
-      : theme.inputBorder
+      : theme.inputBorder;
 
   // Simple URL regex (covers http, https, and www)
-  const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i
+  const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i;
 
   const handleBlur = () => {
-    setIsFocused(false)
+    setIsFocused(false);
     if (required && !value) {
-      setError('URL is required')
+      setError("URL is required");
     } else if (value && !urlRegex.test(value)) {
-      setError('Please enter a valid URL')
+      setError("Please enter a valid URL");
     } else {
-      setError(null)
+      setError(null);
     }
-  }
+  };
 
   return (
     <div>
@@ -76,11 +77,11 @@ export default function UrlInput({ field, value, onChange, theme }) {
           name={name}
           type="url"
           placeholder={placeholder}
-          value={value || ''}
+          value={value || ""}
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={handleBlur}
-          aria-invalid={hasError ? 'true' : 'false'}
+          aria-invalid={hasError ? "true" : "false"}
           aria-describedby={
             hasError
               ? `${name}-error`
@@ -93,12 +94,12 @@ export default function UrlInput({ field, value, onChange, theme }) {
             color: theme.inputText,
             backgroundColor: theme.inputBackground,
             borderColor: borderColor,
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderRadius: '0.375rem',
-            paddingLeft: LeadingIcon ? '2.5rem' : '0.75rem',
-            paddingRight: TrailingIcon || hasError ? '2.5rem' : '0.75rem',
-            outline: 'none',
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderRadius: "0.375rem",
+            paddingLeft: LeadingIcon ? "2.5rem" : "0.75rem",
+            paddingRight: TrailingIcon || hasError ? "2.5rem" : "0.75rem",
+            outline: "none",
           }}
           className="block w-full py-1.5 text-base sm:text-sm/6"
         />
@@ -145,5 +146,5 @@ export default function UrlInput({ field, value, onChange, theme }) {
         </p>
       ) : null}
     </div>
-  )
+  );
 }
