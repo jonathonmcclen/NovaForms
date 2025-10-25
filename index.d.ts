@@ -39,7 +39,7 @@ declare module NovaForms {
     | "TikTok"
     | "GitHub";
 
-  type SocialMediaDictionary = {[id: SocialMediaOptions]: string};
+  type SocialMediaDictionary = { [id: SocialMediaOptions]: string };
 
   // #endregion
 
@@ -550,6 +550,40 @@ declare module NovaForms {
   }
 
   function RadioGroup(props: RadioGroupProps): JSX.Element;
+
+  // MARK: RatingInput
+
+  interface RatingInputField {
+    name: string;
+    title?: string;
+    description?: string;
+    required?: boolean;
+    helper?: string;
+
+    /**
+     * Default: `5`
+     */
+    max?: number;
+
+    /**
+     * An icon from:
+     * ```js
+     * import ReturnIcon from "../utils/returnHeroIcon.jsx";
+     * ```
+     *
+     * Default: `StarIcon`
+     */
+    icon?: string;
+  }
+
+  interface RatingInputProps {
+    field: RatingInputField;
+    value: any;
+    onChange: (arg: { target: { name: string; value: number } }) => void;
+    theme: NovaFormsTheme;
+  }
+
+  function RatingInput(props: RatingInputProps): JSX.Element;
 
   // #endregion
 }

@@ -4,6 +4,15 @@ import { useState } from "react";
 import { ExclamationCircleIcon, StarIcon } from "@heroicons/react/16/solid";
 import ReturnIcon from "../utils/returnHeroIcon.jsx";
 
+/**
+ * @typedef {import('index').NovaForms.RatingInputProps} RatingInputProps
+ */
+
+/**
+ * @param {RatingInputProps} props
+ * 
+ * @returns {JSX.Element}
+ */
 export default function RatingInput({ field, value, onChange, theme }) {
   const {
     name,
