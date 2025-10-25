@@ -729,5 +729,25 @@ declare module NovaForms {
 
   function TimeINput(props: TimeInputProps): JSX.Element;
 
+  // MARK: ImageUploadBase64
+
+  interface ImageUploadBase64Props {
+    value: Base64URLString;
+    onChange?: (base64String: Base64URLString) => void;
+
+    /**
+     * TODO: Maybe use `png` to simplify API without needing the `.`, unless this is a pattern selector format. -Josh
+     * Default: `['.png', '.jpg', '.jpeg', '.gif']
+     */
+    accept?: string[];
+
+    /**
+     * Default: `10 * 1024 * 1024` (10 MB)
+     */
+    maxSize?: number;
+  }
+
+  function ImageUploadBase64(props: ImageUploadBase64Props): JSX.Element;
+
   // #endregion
 }
